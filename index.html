@@ -2,7 +2,8 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>张小明的博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>张小明的博客 | 技术分享</title>
     <style>
         * {
             margin: 0;
@@ -11,44 +12,74 @@
         }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
-            background: #f5f7fa;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', Roboto, Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
             color: #1a202c;
-            line-height: 1.6;
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+        
+        /* 粒子背景效果 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(circle at 25% 50%, rgba(102, 126, 234, 0.03) 0%, transparent 50%),
+                              radial-gradient(circle at 75% 30%, rgba(118, 75, 162, 0.03) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
         }
         
         .container {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 24px;
             display: flex;
-            gap: 30px;
-            align-items: flex-start;
+            gap: 28px;
+            position: relative;
+            z-index: 1;
         }
         
         /* 左侧边栏 */
         .sidebar-left {
-            width: 260px;
+            width: 280px;
             flex-shrink: 0;
             position: sticky;
-            top: 20px;
+            top: 24px;
         }
         
         .logo-area {
-            background: white;
-            border-radius: 16px;
-            padding: 24px;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 28px;
+            padding: 28px 20px;
             text-align: center;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.1);
             margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.5);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .logo-area:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 25px 40px -15px rgba(0,0,0,0.15);
         }
         
         .logo {
             width: 120px;
             height: 120px;
-            margin: 0 auto 15px;
-            border-radius: 60px;
+            margin: 0 auto 18px;
+            border-radius: 50%;
             overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            transition: transform 0.3s ease;
+        }
+        
+        .logo:hover {
+            transform: scale(1.02);
         }
         
         .logo img {
@@ -65,89 +96,125 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 60px;
-            font-size: 24px;
+            border-radius: 50%;
+            font-size: 26px;
             font-weight: bold;
+            margin: 0 auto 18px;
+            transition: transform 0.3s ease;
+        }
+        
+        .logo-text:hover {
+            transform: scale(1.02);
         }
         
         .beijing-time {
             font-size: 18px;
             font-weight: 600;
             color: #2d3748;
-            background: #edf2f7;
-            padding: 8px 12px;
-            border-radius: 12px;
+            background: linear-gradient(135deg, #edf2f7 0%, #e2e8f0 100%);
+            padding: 10px 16px;
+            border-radius: 40px;
             display: inline-block;
-            font-family: monospace;
+            font-family: 'Monaco', 'Menlo', monospace;
+            letter-spacing: 1px;
         }
         
         .shortcuts-area {
-            background: white;
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 28px;
+            padding: 24px;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.5);
+            height: calc(100vh - 280px);
+            min-height: 450px;
             display: flex;
             flex-direction: column;
-            height: 500px;
+            transition: transform 0.3s ease;
+        }
+        
+        .shortcuts-area:hover {
+            transform: translateY(-2px);
         }
         
         .shortcuts-area h3 {
             font-size: 16px;
             color: #4a5568;
-            margin-bottom: 16px;
-            padding-bottom: 8px;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
             border-bottom: 2px solid #e2e8f0;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             flex-shrink: 0;
+            letter-spacing: 0.5px;
+        }
+        
+        .shortcuts-area h3::before {
+            content: '✨';
+            font-size: 18px;
         }
         
         .shortcut-buttons {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 10px;
             flex: 1;
             overflow-y: auto;
+            padding-right: 4px;
         }
         
         .shortcut-buttons::-webkit-scrollbar {
-            width: 6px;
+            width: 5px;
         }
         
         .shortcut-buttons::-webkit-scrollbar-track {
             background: #e2e8f0;
-            border-radius: 3px;
+            border-radius: 10px;
         }
         
         .shortcut-buttons::-webkit-scrollbar-thumb {
-            background: #cbd5e0;
-            border-radius: 3px;
-        }
-        
-        .shortcut-buttons::-webkit-scrollbar-thumb:hover {
-            background: #a0aec0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
         }
         
         .shortcut {
             display: block;
-            padding: 8px 12px;
-            background: #f7fafc;
-            border-radius: 8px;
+            padding: 10px 14px;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 14px;
             text-decoration: none;
             color: #3182ce;
             font-weight: 500;
             border: 1px solid #e2e8f0;
             text-align: center;
-            transition: all 0.2s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             font-size: 14px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .shortcut::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+        
+        .shortcut:hover::before {
+            left: 100%;
         }
         
         .shortcut:hover {
-            background: #3182ce;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            transform: translateX(4px);
-            border-color: #3182ce;
+            transform: translateX(6px);
+            border-color: transparent;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
         }
         
         /* 中间区域 */
@@ -157,18 +224,24 @@
         }
         
         .blog-header {
-            margin-bottom: 30px;
-            border-radius: 20px;
+            margin-bottom: 28px;
+            border-radius: 28px;
             overflow: hidden;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.15);
+            transition: transform 0.3s ease;
+        }
+        
+        .blog-header:hover {
+            transform: translateY(-2px);
         }
         
         .header-bg {
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            background-color: #667eea;
-            padding: 60px 40px;
+            padding: 70px 40px;
             text-align: center;
+            position: relative;
         }
         
         .header-bg-default {
@@ -176,29 +249,37 @@
         }
         
         .header-bg h1 {
-            font-size: 42px;
+            font-size: 48px;
             color: white;
             margin-bottom: 12px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.2);
+            letter-spacing: 2px;
+            font-weight: 700;
         }
         
         .header-bg p {
-            color: rgba(255,255,255,0.9);
+            color: rgba(255,255,255,0.95);
             font-size: 18px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+            text-shadow: 1px 1px 4px rgba(0,0,0,0.15);
+            letter-spacing: 1px;
         }
         
-        /* 简介卡片 - 全图自适应 */
+        /* 简介卡片 */
         .profile-card {
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border-radius: 28px;
+            padding: 40px 48px;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.15);
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            min-height: 400px;
+            min-height: 380px;
             display: flex;
             align-items: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .profile-card:hover {
+            transform: translateY(-2px);
         }
         
         .profile-card-default {
@@ -215,8 +296,8 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0,0,0,0.5);
-            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.6) 100%);
+            border-radius: 28px;
         }
         
         .profile-card {
@@ -225,44 +306,60 @@
         
         .profile-bio {
             color: white;
-            line-height: 1.8;
+            line-height: 1.9;
             position: relative;
             z-index: 1;
             width: 100%;
         }
         
         .profile-bio p {
-            margin-bottom: 16px;
+            margin-bottom: 18px;
+            font-size: 16px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
         
         /* 右侧边栏 */
         .sidebar-right {
-            width: 320px;
+            width: 340px;
             flex-shrink: 0;
             position: sticky;
-            top: 20px;
+            top: 24px;
         }
         
         .article-list-area {
-            background: white;
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 28px;
+            padding: 24px;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.5);
+            height: calc(100vh - 280px);
+            min-height: 450px;
             display: flex;
             flex-direction: column;
-            height: 500px;
+            transition: transform 0.3s ease;
+        }
+        
+        .article-list-area:hover {
+            transform: translateY(-2px);
         }
         
         .article-list-area h3 {
             font-size: 16px;
             color: #4a5568;
-            margin-bottom: 16px;
-            padding-bottom: 8px;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
             border-bottom: 2px solid #e2e8f0;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             flex-shrink: 0;
+            letter-spacing: 0.5px;
+        }
+        
+        .article-list-area h3::before {
+            content: '📖';
+            font-size: 18px;
         }
         
         .article-list {
@@ -271,53 +368,62 @@
             gap: 12px;
             flex: 1;
             overflow-y: auto;
+            padding-right: 4px;
         }
         
         .article-list::-webkit-scrollbar {
-            width: 6px;
+            width: 5px;
         }
         
         .article-list::-webkit-scrollbar-track {
             background: #e2e8f0;
-            border-radius: 3px;
+            border-radius: 10px;
         }
         
         .article-list::-webkit-scrollbar-thumb {
-            background: #cbd5e0;
-            border-radius: 3px;
-        }
-        
-        .article-list::-webkit-scrollbar-thumb:hover {
-            background: #a0aec0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
         }
         
         .article-item {
-            padding: 14px;
-            background: #f7fafc;
-            border-radius: 10px;
-            transition: all 0.2s;
+            padding: 16px;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 16px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             border: 1px solid #e2e8f0;
+            cursor: pointer;
         }
         
         .article-item:hover {
-            background: #edf2f7;
-            transform: translateX(4px);
-            border-color: #cbd5e0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transform: translateX(6px);
+            border-color: transparent;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+        
+        .article-item:hover .article-title a {
+            color: white;
+        }
+        
+        .article-item:hover .article-meta {
+            color: rgba(255,255,255,0.8);
+        }
+        
+        .article-item:hover .article-source {
+            background: rgba(255,255,255,0.2);
+            color: white;
         }
         
         .article-title {
             font-size: 15px;
             font-weight: 600;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
         }
         
         .article-title a {
             color: #2d3748;
             text-decoration: none;
-        }
-        
-        .article-title a:hover {
-            color: #3182ce;
+            transition: color 0.2s;
         }
         
         .article-meta {
@@ -325,19 +431,23 @@
             color: #a0aec0;
             display: flex;
             gap: 12px;
+            transition: color 0.2s;
         }
         
         .article-source {
             background: #e2e8f0;
-            padding: 2px 6px;
-            border-radius: 4px;
+            padding: 2px 8px;
+            border-radius: 20px;
             font-size: 10px;
             color: #4a5568;
+            transition: all 0.2s;
         }
         
+        /* 响应式 */
         @media (max-width: 1000px) {
             .container {
                 flex-direction: column;
+                padding: 16px;
             }
             .sidebar-left, .sidebar-right {
                 width: 100%;
@@ -345,7 +455,7 @@
             }
             .shortcuts-area, .article-list-area {
                 height: auto;
-                max-height: 300px;
+                max-height: 320px;
             }
             .shortcut-buttons {
                 flex-direction: row;
@@ -354,7 +464,7 @@
             }
             .shortcut {
                 flex: 1;
-                min-width: 80px;
+                min-width: 100px;
             }
             .article-list {
                 flex-direction: row;
@@ -363,18 +473,42 @@
             }
             .article-item {
                 flex: 1;
-                min-width: 200px;
+                min-width: 220px;
             }
             .header-bg {
-                padding: 40px 20px;
+                padding: 50px 20px;
             }
             .header-bg h1 {
-                font-size: 28px;
+                font-size: 32px;
             }
             .profile-card {
-                padding: 30px 20px;
-                min-height: 300px;
+                padding: 30px 24px;
+                min-height: auto;
             }
+        }
+        
+        /* 加载动画 */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .sidebar-left, .content-center, .sidebar-right {
+            animation: fadeInUp 0.5s ease-out;
+        }
+        
+        .content-center {
+            animation-delay: 0.1s;
+        }
+        
+        .sidebar-right {
+            animation-delay: 0.2s;
         }
     </style>
 </head>
@@ -384,12 +518,12 @@
     <div class="sidebar-left">
         <div class="logo-area">
             <div class="logo" id="logoContainer">
-                <div class="logo-text" id="defaultLogo">BLOG</div>
+                <div class="logo-text" id="defaultLogo">ZM</div>
             </div>
             <div class="beijing-time" id="beijingTime"></div>
         </div>
         <div class="shortcuts-area">
-            <h3>🔗 快捷链接</h3>
+            <h3>快捷链接</h3>
             <div class="shortcut-buttons" id="shortcutList"></div>
         </div>
     </div>
@@ -398,15 +532,15 @@
         <div class="blog-header">
             <div class="header-bg" id="headerBg">
                 <h1>张小明的博客</h1>
-                <p>记录思考，分享技术</p>
+                <p>记录思考 · 分享技术 · 共同成长</p>
             </div>
         </div>
         
         <div class="profile-card profile-card-default" id="profileCard">
             <div class="profile-bio">
-                <p>👋 你好！我是一名热爱技术的全栈开发工程师，有5年Web开发经验。</p>
+                <p>🌟 你好！我是一名热爱技术的全栈开发工程师，拥有5年Web开发经验。</p>
                 <p>📝 这个博客主要分享前端开发、后端架构、云原生技术等方面的学习心得和实践经验。</p>
-                <p>🎯 我相信技术应该服务于人，希望通过写作帮助更多人成长。</p>
+                <p>🎯 我相信技术应该服务于人，希望通过持续写作帮助更多人成长。</p>
                 <p>📧 联系我：xiaoming.zhang@example.com</p>
                 <p>💡 点击右侧文章列表，可以直接跳转到我的博客文章或其他优质技术文章。</p>
             </div>
@@ -415,7 +549,7 @@
 
     <div class="sidebar-right">
         <div class="article-list-area">
-            <h3>📚 文章列表</h3>
+            <h3>文章列表</h3>
             <div class="article-list" id="articleList"></div>
         </div>
     </div>
@@ -477,7 +611,7 @@ function renderArticleList() {
         html = html + '<div class="article-item">';
         html = html + '<div class="article-title"><a href="' + a.url + '" target="_blank" rel="noopener noreferrer">' + a.title + '</a></div>';
         html = html + '<div class="article-meta">';
-        html = html + '<span>' + a.date + '</span>';
+        html = html + '<span>📅 ' + a.date + '</span>';
         html = html + '<span class="article-source">' + a.source + '</span>';
         html = html + '</div>';
         html = html + '</div>';
@@ -490,7 +624,7 @@ renderArticleList();
 // 在这里填写你的图片URL，留空则使用默认渐变色
 
 // 1. LOGO图片 (建议 120x120 像素，圆形显示)
-var logoImageUrl = './images/仔仔.jpg';
+var logoImageUrl = '';
 // 例如: 'https://example.com/logo.png' 或 './images/logo.png'
 
 // 2. 页眉背景图 (建议 1400x300 像素)
@@ -503,13 +637,11 @@ var cardBgImageUrl = '';
 
 // ==================== 应用图片配置 ====================
 
-// 应用LOGO图片
 if (logoImageUrl) {
     var logoContainer = document.getElementById('logoContainer');
     logoContainer.innerHTML = '<img src="' + logoImageUrl + '" alt="Logo">';
 }
 
-// 应用页眉背景图
 var headerBg = document.getElementById('headerBg');
 if (headerBgImageUrl) {
     headerBg.style.backgroundImage = 'url(' + headerBgImageUrl + ')';
@@ -521,7 +653,6 @@ if (headerBgImageUrl) {
     headerBg.classList.add('header-bg-default');
 }
 
-// 应用简介卡片背景图（自适应全图）
 var profileCard = document.getElementById('profileCard');
 if (cardBgImageUrl) {
     profileCard.style.backgroundImage = 'url(' + cardBgImageUrl + ')';
@@ -530,7 +661,6 @@ if (cardBgImageUrl) {
     profileCard.style.backgroundRepeat = 'no-repeat';
     profileCard.classList.remove('profile-card-default');
     profileCard.classList.add('has-bg-image');
-    // 添加半透明遮罩让文字更清晰
     profileCard.style.position = 'relative';
     var overlay = document.createElement('div');
     overlay.className = 'profile-card-bg';
