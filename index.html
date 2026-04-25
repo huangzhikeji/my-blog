@@ -49,6 +49,7 @@
             margin-top: 10px;
             color: blue;
             cursor: pointer;
+            text-decoration: none;
         }
         .loading {
             text-align: center;
@@ -68,7 +69,7 @@
 <div id="posts"><div class="loading">Loading posts...</div></div>
 
 <script>
-// show time
+// Time
 function showTime() {
     var d = new Date();
     var h = d.getHours();
@@ -82,129 +83,53 @@ function showTime() {
 showTime();
 setInterval(showTime, 1000);
 
-// shortcuts
-var sites = [
-    'GitHub', 'Google', 'StackOverflow', 'Juejin', 'Zhihu',
-    'RuanYifeng', 'Vue', 'React', 'Tailwind', 'MDN'
-];
-var urls = [
-    'https://github.com', 'https://google.com', 'https://stackoverflow.com', 'https://juejin.cn', 'https://zhihu.com',
-    'https://ruanyifeng.com', 'https://vuejs.org', 'https://reactjs.org', 'https://tailwindcss.com', 'https://developer.mozilla.org'
-];
+// Shortcuts
+var sites = ['GitHub', 'Google', 'StackOverflow', 'Juejin', 'Zhihu', 'RuanYifeng', 'Vue', 'React', 'Tailwind', 'MDN'];
+var urls = ['https://github.com', 'https://google.com', 'https://stackoverflow.com', 'https://juejin.cn', 'https://zhihu.com', 'https://ruanyifeng.com', 'https://vuejs.org', 'https://reactjs.org', 'https://tailwindcss.com', 'https://developer.mozilla.org'];
 
-var html = '';
+var shortcutHtml = '';
 for (var i = 0; i < sites.length; i++) {
-    html = html + '<a class="shortcut" href="' + urls[i] + '" target="_blank">' + sites[i] + '</a>';
+    shortcutHtml = shortcutHtml + '<a class="shortcut" href="' + urls[i] + '" target="_blank">' + sites[i] + '</a>';
 }
-document.getElementById('shortcuts').innerHTML = html;
+document.getElementById('shortcuts').innerHTML = shortcutHtml;
 
-// posts config
-var postsConfig = [
-    {title: 'Welcome to My Blog', date: '2026-04-26', file: 'posts/welcome.md'},
-    {title: 'EdgeOne Pages Tutorial', date: '2026-04-25', file: 'posts/edgeone-tutorial.md'},
-    {title: 'Markdown Guide', date: '2026-04-24', file: 'posts/markdown-guide.md'}
+// Posts data (hardcoded first, will load from md later)
+var posts = [
+    {title: 'Welcome to My Blog', date: '2026-04-26', content: '<p>Welcome to my blog. This is the first post.</p><h2>Why Blog?</h2><p>Share knowledge and experiences.</p>', excerpt: 'Welcome to my blog. This is the first post.'},
+    {title: 'EdgeOne Pages Tutorial', date: '2026-04-25', content: '<p>EdgeOne Pages is a great platform for static sites.</p><h2>Steps</h2><ol><li>Login</li><li>Import repo</li><li>Deploy</li></ol>', excerpt: 'EdgeOne Pages is a great platform for static sites.'},
+    {title: 'Markdown Guide', date: '2026-04-24', content: '<p>Markdown is a lightweight markup language.</p><h2>Syntax</h2><ul><li>Headers: #</li><li>Lists: -</li><li>Bold: **</li></ul>', excerpt: 'Markdown is a lightweight markup language.'}
 ];
 
-var loadedPosts = [];
-
-// markdown to html
-function mdToHtml(md) {
-    if (!md) return '';
-    var h = md;
-    h = h.replace(/^# (.*$)/gm, '<h1>$1</h1>');
-    h = h.replace(/^## (.*$)/gm, '<h2>$1</h2>');
-    h = h.replace(/^### (.*$)/gm, '<h3>$1</h3>');
-    h = h.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-    h = h.replace(/\*(.*?)\*/g, '<em>$1</em>');
-    h = h.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank">$1</a>');
-    h = h.replace(/^- (.*$)/gm, '<li>$1</li>');
-    h = h.replace(/^[0-9]+\. (.*$)/gm, '<li>$1</li>');
-    if (h.indexOf('<li>') !== -1) {
-        h = '<ul>' + h + '</ul>';
-    }
-    h = h.replace(/\n/g, '<br>');
-    return h;
+// Show post
+function viewPost(idx) {
+    var p = posts[idx];
+    var w = window.open();
+    var doc = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>' + p.title + '</title>';
+    doc = doc + '<style>body{font-family:Arial;max-width:800px;margin:0 auto;padding:40px;line-height:1.8;}</style>';
+    doc = doc + '</head><body>';
+    doc = doc + '<h1>' + p.title + '</h1>';
+    doc = doc + '<p style="color:#999;">' + p.date + '</p><hr>';
+    doc = doc + p.content;
+    doc = doc + '<hr><p><a href="javascript:window.close()">Close</a></p>';
+    doc = doc + '</body></html>';
+    w.document.write(doc);
+    w.document.close();
 }
 
-// get excerpt
-function getExcerpt(md) {
-    if (!md) return '';
-    var text = md.replace(/[#*]/g, '');
-    if (text.length > 150) {
-        text = text.substring(0, 150) + '...';
-    }
-    return text;
+// Render posts
+var postsHtml = '';
+for (var i = 0; i < posts.length; i++) {
+    var p = posts[i];
+    var minutes = Math.ceil(p.excerpt.length / 200);
+    if (minutes < 1) minutes = 1;
+    postsHtml = postsHtml + '<div class="post">';
+    postsHtml = postsHtml + '<h2><a href="javascript:viewPost(' + i + ')">' + p.title + '</a></h2>';
+    postsHtml = postsHtml + '<div>' + p.date + ' | ' + minutes + ' min read</div>';
+    postsHtml = postsHtml + '<p>' + p.excerpt + '</p>';
+    postsHtml = postsHtml + '<a class="readmore" href="javascript:viewPost(' + i + ')">Read More →</a>';
+    postsHtml = postsHtml + '</div>';
 }
-
-// show post
-function showPost(index) {
-    var post = loadedPosts[index];
-    if (!post) return;
-    var win = window.open();
-    var page = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>' + post.title + '</title>';
-    page = page + '<style>body{font-family:Arial;max-width:800px;margin:0 auto;padding:40px;line-height:1.8;}</style>';
-    page = page + '</head><body>';
-    page = page + '<h1>' + post.title + '</h1>';
-    page = page + '<p style="color:#999;">' + post.date + '</p>';
-    page = page + '<hr>';
-    page = page + post.html;
-    page = page + '<hr><p><a href="javascript:window.close()">Close Window</a></p>';
-    page = page + '</body></html>';
-    win.document.write(page);
-    win.document.close();
-}
-
-window.showPost = showPost;
-
-// load posts
-function loadPosts() {
-    var promises = [];
-    
-    for (var i = 0; i < postsConfig.length; i++) {
-        var cfg = postsConfig[i];
-        var promise = fetch(cfg.file)
-            .then(function(response) {
-                if (!response.ok) throw new Error('fail');
-                return response.text();
-            })
-            .then(function(md) {
-                return {
-                    title: cfg.title,
-                    date: cfg.date,
-                    html: mdToHtml(md),
-                    excerpt: getExcerpt(md)
-                };
-            })
-            .catch(function() {
-                return {
-                    title: cfg.title,
-                    date: cfg.date,
-                    html: '<p>Failed to load post</p>',
-                    excerpt: 'Failed to load post'
-                };
-            });
-        promises.push(promise);
-    }
-    
-    Promise.all(promises).then(function(results) {
-        loadedPosts = results;
-        var postsHtml = '';
-        for (var i = 0; i < results.length; i++) {
-            var p = results[i];
-            postsHtml = postsHtml + '<div class="post">';
-            postsHtml = postsHtml + '<h2><a href="javascript:showPost(' + i + ')">' + p.title + '</a></h2>';
-            postsHtml = postsHtml + '<div>' + p.date + '</div>';
-            postsHtml = postsHtml + '<p>' + p.excerpt + '</p>';
-            postsHtml = postsHtml + '<a class="readmore" href="javascript:showPost(' + i + ')">Read More →</a>';
-            postsHtml = postsHtml + '</div>';
-        }
-        document.getElementById('posts').innerHTML = postsHtml;
-    }).catch(function(err) {
-        document.getElementById('posts').innerHTML = '<div class="loading">Load failed, please refresh</div>';
-    });
-}
-
-loadPosts();
+document.getElementById('posts').innerHTML = postsHtml;
 </script>
 
 </body>
