@@ -290,7 +290,7 @@
             const loadedPosts = [];
             const container = document.getElementById('postsContainer');
 
-            // 修复2：用 Blob URL 替代 document.write，避免字符串中的 </script> 提前截断外层脚本
+            // 用 Blob URL 替代 document.write，避免 HTML 标签干扰脚本解析
             window.showPost = function(index) {
                 const post = loadedPosts[index];
                 if (!post) return;
