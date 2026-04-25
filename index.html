@@ -28,6 +28,9 @@
         .sidebar {
             width: 280px;
             flex-shrink: 0;
+            position: sticky;
+            top: 20px;
+            height: fit-content;
         }
         
         .logo-area {
@@ -51,6 +54,7 @@
             border-radius: 60px;
             font-size: 24px;
             font-weight: bold;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
         
         .beijing-time {
@@ -95,11 +99,14 @@
             font-weight: 500;
             border: 1px solid #e2e8f0;
             text-align: center;
+            transition: all 0.2s;
         }
         
         .shortcut:hover {
             background: #3182ce;
             color: white;
+            transform: translateX(4px);
+            border-color: #3182ce;
         }
         
         .main-content {
@@ -146,7 +153,6 @@
         .post-title {
             font-size: 22px;
             margin-bottom: 8px;
-            color: #2d3748;
         }
         
         .post-title a {
@@ -164,12 +170,19 @@
             margin-bottom: 12px;
         }
         
+        .post-excerpt {
+            color: #4a5568;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
         @media (max-width: 768px) {
             .container {
                 flex-direction: column;
             }
             .sidebar {
                 width: 100%;
+                position: static;
             }
             .shortcut-buttons {
                 flex-direction: row;
@@ -239,15 +252,55 @@ for (var i = 0; i < shortcutNames.length; i++) {
 }
 document.getElementById('shortcutList').innerHTML = shortcutHtml;
 
-// 文章列表（只有标题和日期）
 var articles = [
-    { title: '欢迎来到我的博客', date: '2026-04-26' },
-    { title: 'EdgeOne Pages 部署教程', date: '2026-04-25' },
-    { title: 'Markdown 写作指南', date: '2026-04-24' }
+    {
+        title: '欢迎来到我的博客',
+        date: '2026-04-26',
+        excerpt: '这是我的第一篇博客文章。欢迎来到我的个人博客，这里会分享技术心得和学习笔记。',
+        content: '<h1>欢迎来到我的博客</h1><p>大家好！欢迎访问我的个人博客。</p><h2>为什么写博客？</h2><p>记录技术成长、分享学习心得是一件非常有意义的事情。通过写作，我们能够：</p><ul><li>加深对知识的理解</li><li>帮助他人解决问题</li><li>建立个人品牌</li></ul><h2>博客技术栈</h2><p>本博客采用纯静态方案搭建：</p><ul><li>部署平台：腾讯云 EdgeOne Pages</li><li>代码托管：GitHub</li><li>内容格式：直接写在 HTML 中</li></ul><h2>未来计划</h2><p>接下来我会持续更新以下内容：</p><ol><li>前端开发技巧</li><li>云原生技术实践</li><li>开源项目推荐</li></ol><p>感谢你的关注！</p>'
+    },
+    {
+        title: 'EdgeOne Pages 部署教程',
+        date: '2026-04-25',
+        excerpt: '详细介绍如何使用腾讯云 EdgeOne Pages 快速部署静态网站。EdgeOne Pages 是一个强大的静态网站托管平台。',
+        content: '<h1>EdgeOne Pages 部署教程</h1><p>腾讯云 EdgeOne Pages 是一个强大的静态网站托管平台。</p><h2>部署步骤</h2><ol><li>登录腾讯云控制台</li><li>进入 EdgeOne Pages 服务</li><li>点击创建项目</li><li>选择导入 Git 仓库</li><li>授权 GitHub 账号</li><li>选择你的博客仓库</li><li>点击部署</li></ol><h2>优点</h2><ul><li>快速部署</li><li>自动 SSL 证书</li><li>全球 CDN 加速</li><li>免费额度充足</li></ul><h2>注意事项</h2><p>部署完成后，可以通过自动生成的域名访问你的网站，也可以绑定自定义域名。</p><p>开始你的部署之旅吧！</p>'
+    },
+    {
+        title: 'Markdown 写作指南',
+        date: '2026-04-24',
+        excerpt: '高效使用 Markdown 进行技术写作，让你的文章更专业。Markdown 是一种轻量级标记语言。',
+        content: '<h1>Markdown 写作指南</h1><p>Markdown 是一种轻量级标记语言。</p><h2>基础语法</h2><h3>标题</h3><p>使用 # 号表示标题：</p><pre># 一级标题\n## 二级标题\n### 三级标题</pre><h3>列表</h3><p>无序列表使用 - 或 *：</p><ul><li>项目1</li><li>项目2</li><li>项目3</li></ul><p>有序列表使用数字加点：</p><ol><li>第一项</li><li>第二项</li><li>第三项</li></ol><h3>链接和图片</h3><p>链接：[链接文字](URL地址)</p><p>图片：![图片描述](图片地址)</p><h3>代码</h3><p>行内代码使用 <code>code</code>，代码块使用三个反引号。</p><h2>结语</h2><p>Markdown 简单易学，是技术写作的最佳选择！</p>'
+    }
 ];
 
 function showArticle(index) {
-    alert('文章内容待添加\n\n标题：' + articles[index].title);
+    var a = articles[index];
+    var win = window.open();
+    var html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>' + a.title + '</title>';
+    html = html + '<style>';
+    html = html + 'body{font-family:Arial,sans-serif;max-width:800px;margin:0 auto;padding:40px;background:#fff;line-height:1.8;}';
+    html = html + 'h1{color:#2d3748;border-bottom:2px solid #e2e8f0;padding-bottom:10px;}';
+    html = html + 'h2{margin-top:30px;margin-bottom:15px;color:#2d3748;}';
+    html = html + 'h3{margin-top:20px;margin-bottom:10px;}';
+    html = html + 'p{margin-bottom:15px;}';
+    html = html + 'ul,ol{margin:10px 0 20px 30px;}';
+    html = html + 'li{margin:5px 0;}';
+    html = html + 'pre{background:#f4f4f4;padding:15px;border-radius:8px;overflow-x:auto;margin:15px 0;}';
+    html = html + 'code{background:#f4f4f4;padding:2px 6px;border-radius:4px;}';
+    html = html + 'hr{margin:30px 0;}';
+    html = html + '.date{color:#a0aec0;margin-bottom:20px;}';
+    html = html + '.back-btn{display:inline-block;margin-top:30px;color:#3182ce;text-decoration:none;}';
+    html = html + '</style>';
+    html = html + '</head><body>';
+    html = html + '<h1>' + a.title + '</h1>';
+    html = html + '<div class="date">📅 ' + a.date + '</div>';
+    html = html + '<hr>';
+    html = html + a.content;
+    html = html + '<hr>';
+    html = html + '<a href="javascript:window.close()" class="back-btn">← 关闭窗口</a>';
+    html = html + '</body></html>';
+    win.document.write(html);
+    win.document.close();
 }
 
 window.showArticle = showArticle;
@@ -255,9 +308,12 @@ window.showArticle = showArticle;
 var postHtml = '';
 for (var i = 0; i < articles.length; i++) {
     var a = articles[i];
+    var minutes = Math.ceil(a.excerpt.length / 200);
+    if (minutes < 1) minutes = 1;
     postHtml = postHtml + '<div class="post-card">';
     postHtml = postHtml + '<div class="post-title"><a href="javascript:showArticle(' + i + ')">' + a.title + '</a></div>';
-    postHtml = postHtml + '<div class="post-date">' + a.date + '</div>';
+    postHtml = postHtml + '<div class="post-date">' + a.date + ' · 约' + minutes + '分钟阅读</div>';
+    postHtml = postHtml + '<div class="post-excerpt">' + a.excerpt + '</div>';
     postHtml = postHtml + '</div>';
 }
 document.getElementById('postList').innerHTML = postHtml;
