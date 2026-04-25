@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>博 客</title>
+    <title>张小明的博客</title>
     <style>
         * {
             margin: 0;
@@ -23,6 +23,7 @@
             padding: 20px;
             display: flex;
             gap: 30px;
+            align-items: flex-start;
         }
         
         /* 左侧边栏 */
@@ -31,7 +32,6 @@
             flex-shrink: 0;
             position: sticky;
             top: 20px;
-            height: fit-content;
         }
         
         .logo-area {
@@ -86,6 +86,9 @@
             border-radius: 16px;
             padding: 20px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            height: 500px;
         }
         
         .shortcuts-area h3 {
@@ -97,17 +100,17 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            flex-shrink: 0;
         }
         
         .shortcut-buttons {
             display: flex;
             flex-direction: column;
             gap: 8px;
-            max-height: 400px;
+            flex: 1;
             overflow-y: auto;
         }
         
-        /* 自定义滚动条 */
         .shortcut-buttons::-webkit-scrollbar {
             width: 6px;
         }
@@ -162,6 +165,7 @@
         .header-bg {
             background-size: cover;
             background-position: center;
+            background-repeat: no-repeat;
             background-color: #667eea;
             padding: 60px 40px;
             text-align: center;
@@ -184,16 +188,25 @@
             text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
         }
         
+        /* 简介卡片 - 全图自适应 */
         .profile-card {
             border-radius: 20px;
             padding: 40px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
             background-size: cover;
             background-position: center;
+            background-repeat: no-repeat;
+            min-height: 400px;
+            display: flex;
+            align-items: center;
         }
         
         .profile-card-default {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .has-bg-image {
+            position: relative;
         }
         
         .profile-card-bg {
@@ -215,6 +228,7 @@
             line-height: 1.8;
             position: relative;
             z-index: 1;
+            width: 100%;
         }
         
         .profile-bio p {
@@ -227,7 +241,6 @@
             flex-shrink: 0;
             position: sticky;
             top: 20px;
-            height: fit-content;
         }
         
         .article-list-area {
@@ -235,6 +248,9 @@
             border-radius: 16px;
             padding: 20px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            height: 500px;
         }
         
         .article-list-area h3 {
@@ -246,13 +262,14 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            flex-shrink: 0;
         }
         
         .article-list {
             display: flex;
             flex-direction: column;
             gap: 12px;
-            max-height: 500px;
+            flex: 1;
             overflow-y: auto;
         }
         
@@ -326,10 +343,14 @@
                 width: 100%;
                 position: static;
             }
+            .shortcuts-area, .article-list-area {
+                height: auto;
+                max-height: 300px;
+            }
             .shortcut-buttons {
                 flex-direction: row;
                 flex-wrap: wrap;
-                max-height: none;
+                overflow-y: visible;
             }
             .shortcut {
                 flex: 1;
@@ -338,7 +359,7 @@
             .article-list {
                 flex-direction: row;
                 flex-wrap: wrap;
-                max-height: none;
+                overflow-y: visible;
             }
             .article-item {
                 flex: 1;
@@ -352,6 +373,7 @@
             }
             .profile-card {
                 padding: 30px 20px;
+                min-height: 300px;
             }
         }
     </style>
@@ -375,8 +397,8 @@
     <div class="content-center">
         <div class="blog-header">
             <div class="header-bg" id="headerBg">
-                <h1>张 小 明 的 博 客</h1>
-                <p>记 录 思 考，分 享 技 术</p>
+                <h1>张小明的博客</h1>
+                <p>记录思考，分享技术</p>
             </div>
         </div>
         
@@ -415,8 +437,7 @@ function updateBeijingTime() {
 updateBeijingTime();
 setInterval(updateBeijingTime, 1000);
 
-// ========== 快捷按钮列表 - 在这里添加/删除快捷按钮 ==========
-// 格式: ['按钮名称', '链接地址']
+// ========== 快捷按钮列表 ==========
 var shortcuts = [
     ['GitHub', 'https://github.com'],
     ['掘金', 'https://juejin.cn'],
@@ -428,10 +449,8 @@ var shortcuts = [
     ['MDN', 'https://developer.mozilla.org'],
     ['Stack Overflow', 'https://stackoverflow.com'],
     ['Google', 'https://google.com'],
-    // 在这里继续添加更多快捷按钮...
 ];
 
-// 渲染快捷按钮（自动延伸，超出显示滚动条）
 function renderShortcuts() {
     var html = '';
     for (var i = 0; i < shortcuts.length; i++) {
@@ -441,8 +460,7 @@ function renderShortcuts() {
 }
 renderShortcuts();
 
-// ========== 文章列表 - 在这里添加/删除文章 ==========
-// 格式: { title: '文章标题', date: '日期', source: '来源', url: '链接' }
+// ========== 文章列表 ==========
 var articles = [
     { title: '欢迎来到我的博客', date: '2026-04-26', source: '本站', url: 'https://raw.githubusercontent.com/你的用户名/仓库名/main/posts/welcome.md' },
     { title: 'EdgeOne Pages 部署教程', date: '2026-04-25', source: '本站', url: 'https://raw.githubusercontent.com/你的用户名/仓库名/main/posts/edgeone-tutorial.md' },
@@ -450,12 +468,8 @@ var articles = [
     { title: 'React 18 新特性', date: '2026-04-18', source: 'React官方', url: 'https://react.dev/blog/2022/03/29/react-v18' },
     { title: '前端性能优化完全指南', date: '2026-04-10', source: '掘金', url: 'https://juejin.cn/post/123456789' },
     { title: 'TypeScript 入门前端', date: '2026-04-05', source: '知乎', url: 'https://zhuanlan.zhihu.com/p/123456789' },
-    { title: 'Node.js 最佳实践', date: '2026-03-28', source: 'GitHub', url: 'https://github.com/goldbergyoni/nodebestpractices' },
-    { title: 'Docker 入门教程', date: '2026-03-20', source: '阮一峰', url: 'https://ruanyifeng.com/blog/docker/' },
-    // 在这里继续添加更多文章...
 ];
 
-// 渲染文章列表（自动延伸，超出显示滚动条）
 function renderArticleList() {
     var html = '';
     for (var i = 0; i < articles.length; i++) {
@@ -472,33 +486,51 @@ function renderArticleList() {
 }
 renderArticleList();
 
-// ========== 自定义图片配置 ==========
-// 留空使用默认渐变色，填写URL使用自定义图片
-var logoImageUrl = 'https://tc.xuer.us.kg/image/1775711836560-6e9y64.jpg';
-var headerBgImageUrl = 'https://tc.xuer.us.kg/image/1776924136833-2l2k3y.png';
-var cardBgImageUrl = 'https://tc.xuer.us.kg/image/1775913871767-8ybacf.jpg';
+// ==================== 图片配置区域 ====================
+// 在这里填写你的图片URL，留空则使用默认渐变色
 
+// 1. LOGO图片 (建议 120x120 像素，圆形显示)
+var logoImageUrl = '';
+// 例如: 'https://example.com/logo.png' 或 './images/logo.png'
+
+// 2. 页眉背景图 (建议 1400x300 像素)
+var headerBgImageUrl = '';
+// 例如: 'https://example.com/header-bg.jpg' 或 './images/header-bg.jpg'
+
+// 3. 简介卡片背景图 (自适应全图，建议 800x400 以上)
+var cardBgImageUrl = '';
+// 例如: 'https://example.com/card-bg.jpg' 或 './images/card-bg.jpg'
+
+// ==================== 应用图片配置 ====================
+
+// 应用LOGO图片
 if (logoImageUrl) {
     var logoContainer = document.getElementById('logoContainer');
     logoContainer.innerHTML = '<img src="' + logoImageUrl + '" alt="Logo">';
 }
 
+// 应用页眉背景图
+var headerBg = document.getElementById('headerBg');
 if (headerBgImageUrl) {
-    var headerBg = document.getElementById('headerBg');
     headerBg.style.backgroundImage = 'url(' + headerBgImageUrl + ')';
     headerBg.style.backgroundSize = 'cover';
     headerBg.style.backgroundPosition = 'center';
+    headerBg.style.backgroundRepeat = 'no-repeat';
     headerBg.classList.remove('header-bg-default');
 } else {
     headerBg.classList.add('header-bg-default');
 }
 
+// 应用简介卡片背景图（自适应全图）
+var profileCard = document.getElementById('profileCard');
 if (cardBgImageUrl) {
-    var profileCard = document.getElementById('profileCard');
     profileCard.style.backgroundImage = 'url(' + cardBgImageUrl + ')';
     profileCard.style.backgroundSize = 'cover';
     profileCard.style.backgroundPosition = 'center';
+    profileCard.style.backgroundRepeat = 'no-repeat';
     profileCard.classList.remove('profile-card-default');
+    profileCard.classList.add('has-bg-image');
+    // 添加半透明遮罩让文字更清晰
     profileCard.style.position = 'relative';
     var overlay = document.createElement('div');
     overlay.className = 'profile-card-bg';
