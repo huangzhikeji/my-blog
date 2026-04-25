@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>张小明的博客</title>
+    <title>博 客</title>
     <style>
         * {
             margin: 0;
@@ -94,12 +94,36 @@
             margin-bottom: 16px;
             padding-bottom: 8px;
             border-bottom: 2px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
         .shortcut-buttons {
             display: flex;
             flex-direction: column;
             gap: 8px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        /* 自定义滚动条 */
+        .shortcut-buttons::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .shortcut-buttons::-webkit-scrollbar-track {
+            background: #e2e8f0;
+            border-radius: 3px;
+        }
+        
+        .shortcut-buttons::-webkit-scrollbar-thumb {
+            background: #cbd5e0;
+            border-radius: 3px;
+        }
+        
+        .shortcut-buttons::-webkit-scrollbar-thumb:hover {
+            background: #a0aec0;
         }
         
         .shortcut {
@@ -228,11 +252,10 @@
             display: flex;
             flex-direction: column;
             gap: 12px;
-            max-height: 600px;
+            max-height: 500px;
             overflow-y: auto;
         }
         
-        /* 自定义滚动条 */
         .article-list::-webkit-scrollbar {
             width: 6px;
         }
@@ -306,6 +329,7 @@
             .shortcut-buttons {
                 flex-direction: row;
                 flex-wrap: wrap;
+                max-height: none;
             }
             .shortcut {
                 flex: 1;
@@ -343,7 +367,7 @@
             <div class="beijing-time" id="beijingTime"></div>
         </div>
         <div class="shortcuts-area">
-            <h3>快捷链接</h3>
+            <h3>🔗 快捷链接</h3>
             <div class="shortcut-buttons" id="shortcutList"></div>
         </div>
     </div>
@@ -351,23 +375,13 @@
     <div class="content-center">
         <div class="blog-header">
             <div class="header-bg" id="headerBg">
-                <h1>张小明的博客</h1>
-                <p>记录思考，分享技术</p>
+                <h1>张 小 明 的 博 客</h1>
+                <p>记 录 思 考，分 享 技 术</p>
             </div>
         </div>
         
         <div class="profile-card profile-card-default" id="profileCard">
             <div class="profile-bio">
-                <p>👋 你好！我是一名热爱技术的全栈开发工程师，有5年Web开发经验。</p>
-                <p>📝 这个博客主要分享前端开发、后端架构、云原生技术等方面的学习心得和实践经验。</p>
-                <p>🎯 我相信技术应该服务于人，希望通过写作帮助更多人成长。</p>
-                <p>📧 联系我：xiaoming.zhang@example.com</p>
-                <p>💡 点击右侧文章列表，可以直接跳转到我的博客文章或其他优质技术文章。</p>
-                <p>👋 你好！我是一名热爱技术的全栈开发工程师，有5年Web开发经验。</p>
-                <p>📝 这个博客主要分享前端开发、后端架构、云原生技术等方面的学习心得和实践经验。</p>
-                <p>🎯 我相信技术应该服务于人，希望通过写作帮助更多人成长。</p>
-                <p>📧 联系我：xiaoming.zhang@example.com</p>
-                <p>💡 点击右侧文章列表，可以直接跳转到我的博客文章或其他优质技术文章。</p>
                 <p>👋 你好！我是一名热爱技术的全栈开发工程师，有5年Web开发经验。</p>
                 <p>📝 这个博客主要分享前端开发、后端架构、云原生技术等方面的学习心得和实践经验。</p>
                 <p>🎯 我相信技术应该服务于人，希望通过写作帮助更多人成长。</p>
@@ -401,28 +415,34 @@ function updateBeijingTime() {
 updateBeijingTime();
 setInterval(updateBeijingTime, 1000);
 
-// 快捷按钮
-var shortcutNames = ['GitHub', '掘金', '知乎', '阮一峰', '空按钮', '空按钮', '空按钮'];
-var shortcutUrls = [
-    'https://github.com',
-    'https://juejin.cn',
-    'https://zhihu.com',
-    'https://ruanyifeng.com'
-    'https://juejin.cn',
-    'https://zhihu.com',
-    'https://ruanyifeng.com'
+// ========== 快捷按钮列表 - 在这里添加/删除快捷按钮 ==========
+// 格式: ['按钮名称', '链接地址']
+var shortcuts = [
+    ['GitHub', 'https://github.com'],
+    ['掘金', 'https://juejin.cn'],
+    ['知乎', 'https://zhihu.com'],
+    ['阮一峰', 'https://ruanyifeng.com'],
+    ['Vue.js', 'https://vuejs.org'],
+    ['React', 'https://reactjs.org'],
+    ['Tailwind CSS', 'https://tailwindcss.com'],
+    ['MDN', 'https://developer.mozilla.org'],
+    ['Stack Overflow', 'https://stackoverflow.com'],
+    ['Google', 'https://google.com'],
+    // 在这里继续添加更多快捷按钮...
 ];
 
-var shortcutHtml = '';
-for (var i = 0; i < shortcutNames.length; i++) {
-    shortcutHtml = shortcutHtml + '<a class="shortcut" href="' + shortcutUrls[i] + '" target="_blank" rel="noopener noreferrer">' + shortcutNames[i] + '</a>';
+// 渲染快捷按钮（自动延伸，超出显示滚动条）
+function renderShortcuts() {
+    var html = '';
+    for (var i = 0; i < shortcuts.length; i++) {
+        html = html + '<a class="shortcut" href="' + shortcuts[i][1] + '" target="_blank" rel="noopener noreferrer">' + shortcuts[i][0] + '</a>';
+    }
+    document.getElementById('shortcutList').innerHTML = html;
 }
-document.getElementById('shortcutList').innerHTML = shortcutHtml;
+renderShortcuts();
 
 // ========== 文章列表 - 在这里添加/删除文章 ==========
-// 添加文章：复制下面格式，在最后添加
-// { title: '文章标题', date: '2026-04-27', source: '来源', url: 'https://链接' },
-
+// 格式: { title: '文章标题', date: '日期', source: '来源', url: '链接' }
 var articles = [
     { title: '欢迎来到我的博客', date: '2026-04-26', source: '本站', url: 'https://raw.githubusercontent.com/你的用户名/仓库名/main/posts/welcome.md' },
     { title: 'EdgeOne Pages 部署教程', date: '2026-04-25', source: '本站', url: 'https://raw.githubusercontent.com/你的用户名/仓库名/main/posts/edgeone-tutorial.md' },
@@ -430,22 +450,12 @@ var articles = [
     { title: 'React 18 新特性', date: '2026-04-18', source: 'React官方', url: 'https://react.dev/blog/2022/03/29/react-v18' },
     { title: '前端性能优化完全指南', date: '2026-04-10', source: '掘金', url: 'https://juejin.cn/post/123456789' },
     { title: 'TypeScript 入门前端', date: '2026-04-05', source: '知乎', url: 'https://zhuanlan.zhihu.com/p/123456789' },
-    { title: '欢迎来到我的博客', date: '2026-04-26', source: '本站', url: 'https://raw.githubusercontent.com/你的用户名/仓库名/main/posts/welcome.md' },
-    { title: 'EdgeOne Pages 部署教程', date: '2026-04-25', source: '本站', url: 'https://raw.githubusercontent.com/你的用户名/仓库名/main/posts/edgeone-tutorial.md' },
-    { title: 'Vue 3 完整指南', date: '2026-04-20', source: 'Vue官方', url: 'https://vuejs.org/guide/introduction.html' },
-    { title: 'React 18 新特性', date: '2026-04-18', source: 'React官方', url: 'https://react.dev/blog/2022/03/29/react-v18' },
-    { title: '前端性能优化完全指南', date: '2026-04-10', source: '掘金', url: 'https://juejin.cn/post/123456789' },
-    { title: 'TypeScript 入门前端', date: '2026-04-05', source: '知乎', url: 'https://zhuanlan.zhihu.com/p/123456789' },
-    { title: '欢迎来到我的博客', date: '2026-04-26', source: '本站', url: 'https://raw.githubusercontent.com/你的用户名/仓库名/main/posts/welcome.md' },
-    { title: 'EdgeOne Pages 部署教程', date: '2026-04-25', source: '本站', url: 'https://raw.githubusercontent.com/你的用户名/仓库名/main/posts/edgeone-tutorial.md' },
-    { title: 'Vue 3 完整指南', date: '2026-04-20', source: 'Vue官方', url: 'https://vuejs.org/guide/introduction.html' },
-    { title: 'React 18 新特性', date: '2026-04-18', source: 'React官方', url: 'https://react.dev/blog/2022/03/29/react-v18' },
-    { title: '前端性能优化完全指南', date: '2026-04-10', source: '掘金', url: 'https://juejin.cn/post/123456789' },
-    { title: 'TypeScript 入门前端', date: '2026-04-05', source: '知乎', url: 'https://zhuanlan.zhihu.com/p/123456789' },
+    { title: 'Node.js 最佳实践', date: '2026-03-28', source: 'GitHub', url: 'https://github.com/goldbergyoni/nodebestpractices' },
+    { title: 'Docker 入门教程', date: '2026-03-20', source: '阮一峰', url: 'https://ruanyifeng.com/blog/docker/' },
     // 在这里继续添加更多文章...
 ];
 
-// 渲染右侧文章列表（自动延伸）
+// 渲染文章列表（自动延伸，超出显示滚动条）
 function renderArticleList() {
     var html = '';
     for (var i = 0; i < articles.length; i++) {
@@ -460,10 +470,10 @@ function renderArticleList() {
     }
     document.getElementById('articleList').innerHTML = html;
 }
-
 renderArticleList();
 
 // ========== 自定义图片配置 ==========
+// 留空使用默认渐变色，填写URL使用自定义图片
 var logoImageUrl = '';
 var headerBgImageUrl = '';
 var cardBgImageUrl = '';
