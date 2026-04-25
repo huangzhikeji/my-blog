@@ -107,23 +107,61 @@
             min-width: 0;
         }
         
-        .welcome {
-            background: white;
-            border-radius: 20px;
-            padding: 40px;
-            text-align: center;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        .blog-header {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e2e8f0;
         }
         
-        .welcome h1 {
+        .blog-header h1 {
             font-size: 32px;
             color: #2d3748;
-            margin-bottom: 16px;
+            margin-bottom: 8px;
         }
         
-        .welcome p {
+        .blog-header p {
             color: #718096;
             font-size: 16px;
+        }
+        
+        .posts-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .post-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: all 0.2s;
+        }
+        
+        .post-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .post-title {
+            font-size: 22px;
+            margin-bottom: 8px;
+            color: #2d3748;
+        }
+        
+        .post-title a {
+            color: #2d3748;
+            text-decoration: none;
+        }
+        
+        .post-title a:hover {
+            color: #3182ce;
+        }
+        
+        .post-date {
+            color: #a0aec0;
+            font-size: 14px;
+            margin-bottom: 12px;
         }
         
         @media (max-width: 768px) {
@@ -158,10 +196,11 @@
         </div>
     </div>
     <div class="main-content">
-        <div class="welcome">
+        <div class="blog-header">
             <h1>我的博客</h1>
             <p>记录思考，分享技术</p>
         </div>
+        <div class="posts-list" id="postList"></div>
     </div>
 </div>
 
@@ -199,6 +238,29 @@ for (var i = 0; i < shortcutNames.length; i++) {
     shortcutHtml = shortcutHtml + '<a class="shortcut" href="' + shortcutUrls[i] + '" target="_blank" rel="noopener noreferrer">' + shortcutNames[i] + '</a>';
 }
 document.getElementById('shortcutList').innerHTML = shortcutHtml;
+
+// 文章列表（只有标题和日期）
+var articles = [
+    { title: '欢迎来到我的博客', date: '2026-04-26' },
+    { title: 'EdgeOne Pages 部署教程', date: '2026-04-25' },
+    { title: 'Markdown 写作指南', date: '2026-04-24' }
+];
+
+function showArticle(index) {
+    alert('文章内容待添加\n\n标题：' + articles[index].title);
+}
+
+window.showArticle = showArticle;
+
+var postHtml = '';
+for (var i = 0; i < articles.length; i++) {
+    var a = articles[i];
+    postHtml = postHtml + '<div class="post-card">';
+    postHtml = postHtml + '<div class="post-title"><a href="javascript:showArticle(' + i + ')">' + a.title + '</a></div>';
+    postHtml = postHtml + '<div class="post-date">' + a.date + '</div>';
+    postHtml = postHtml + '</div>';
+}
+document.getElementById('postList').innerHTML = postHtml;
 </script>
 
 </body>
