@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>张小明的博客 | 技术分享</title>
+    <title>张小明的博客</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', Roboto, Arial, sans-serif;
             background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
@@ -18,8 +18,7 @@
             line-height: 1.6;
             min-height: 100vh;
         }
-        
-        /* 粒子背景效果 */
+
         body::before {
             content: '';
             position: fixed;
@@ -32,7 +31,7 @@
             pointer-events: none;
             z-index: 0;
         }
-        
+
         .container {
             max-width: 1400px;
             margin: 0 auto;
@@ -43,7 +42,7 @@
             z-index: 1;
             align-items: stretch;
         }
-        
+
         /* 左侧边栏 */
         .sidebar-left {
             width: 280px;
@@ -51,7 +50,7 @@
             display: flex;
             flex-direction: column;
         }
-        
+
         .logo-area {
             background: rgba(255,255,255,0.95);
             backdrop-filter: blur(10px);
@@ -61,14 +60,13 @@
             box-shadow: 0 20px 35px -12px rgba(0,0,0,0.1);
             margin-bottom: 20px;
             border: 1px solid rgba(255,255,255,0.5);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.3s ease;
         }
-        
+
         .logo-area:hover {
             transform: translateY(-2px);
-            box-shadow: 0 25px 40px -15px rgba(0,0,0,0.15);
         }
-        
+
         .logo {
             width: 120px;
             height: 120px;
@@ -76,38 +74,15 @@
             border-radius: 50%;
             overflow: hidden;
             box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-            transition: transform 0.3s ease;
-        }
-        
-        .logo:hover {
-            transform: scale(1.02);
-        }
-        
-        .logo img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .logo-text {
-            width: 120px;
-            height: 120px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 50%;
             font-size: 26px;
             font-weight: bold;
-            margin: 0 auto 15px;
-            transition: transform 0.3s ease;
+            color: white;
         }
-        
-        .logo-text:hover {
-            transform: scale(1.02);
-        }
-        
+
         .beijing-time {
             font-size: 17px;
             font-weight: 600;
@@ -116,10 +91,9 @@
             padding: 8px 14px;
             border-radius: 40px;
             display: inline-block;
-            font-family: 'Monaco', 'Menlo', monospace;
-            letter-spacing: 1px;
+            font-family: monospace;
         }
-        
+
         .shortcuts-area {
             background: rgba(255,255,255,0.95);
             backdrop-filter: blur(10px);
@@ -130,13 +104,8 @@
             display: flex;
             flex-direction: column;
             flex: 1;
-            transition: transform 0.3s ease;
         }
-        
-        .shortcuts-area:hover {
-            transform: translateY(-2px);
-        }
-        
+
         .shortcuts-area h3 {
             font-size: 15px;
             color: #4a5568;
@@ -146,184 +115,109 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            flex-shrink: 0;
-            letter-spacing: 0.5px;
         }
-        
+
         .shortcuts-area h3::before {
             content: '✨';
-            font-size: 16px;
         }
-        
+
         .shortcut-buttons {
             display: flex;
             flex-direction: column;
             gap: 8px;
             flex: 1;
             overflow-y: auto;
-            padding-right: 4px;
         }
-        
+
         .shortcut-buttons::-webkit-scrollbar {
             width: 5px;
         }
-        
+
         .shortcut-buttons::-webkit-scrollbar-track {
             background: #e2e8f0;
             border-radius: 10px;
         }
-        
+
         .shortcut-buttons::-webkit-scrollbar-thumb {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border-radius: 10px;
         }
-        
+
         .shortcut {
             display: block;
             padding: 8px 12px;
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            background: #f8fafc;
             border-radius: 12px;
             text-decoration: none;
             color: #3182ce;
             font-weight: 500;
             border: 1px solid #e2e8f0;
             text-align: center;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s;
             font-size: 13px;
-            position: relative;
-            overflow: hidden;
         }
-        
-        .shortcut::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            transition: left 0.5s;
-        }
-        
-        .shortcut:hover::before {
-            left: 100%;
-        }
-        
+
         .shortcut:hover {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             transform: translateX(6px);
             border-color: transparent;
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
         }
-        
+
         /* 中间区域 */
         .content-center {
             flex: 1;
-            min-width: 0;
             display: flex;
             flex-direction: column;
         }
-        
+
         .blog-header {
             margin-bottom: 20px;
             border-radius: 24px;
             overflow: hidden;
             box-shadow: 0 20px 35px -12px rgba(0,0,0,0.15);
-            transition: transform 0.3s ease;
         }
-        
-        .blog-header:hover {
-            transform: translateY(-2px);
-        }
-        
+
         .header-bg {
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             padding: 40px 40px;
             text-align: center;
-            position: relative;
         }
-        
-        .header-bg-default {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-        
+
         .header-bg h1 {
             font-size: 38px;
             color: white;
             margin-bottom: 8px;
             text-shadow: 2px 2px 8px rgba(0,0,0,0.2);
-            letter-spacing: 2px;
-            font-weight: 700;
         }
-        
+
         .header-bg p {
             color: rgba(255,255,255,0.95);
             font-size: 16px;
-            text-shadow: 1px 1px 4px rgba(0,0,0,0.15);
-            letter-spacing: 1px;
         }
-        
-        /* 简介卡片 - 紧凑版 */
+
         .profile-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border-radius: 24px;
             padding: 28px 36px;
             box-shadow: 0 20px 35px -12px rgba(0,0,0,0.15);
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            display: flex;
-            align-items: center;
-            transition: transform 0.3s ease;
             flex: 1;
         }
-        
-        .profile-card:hover {
-            transform: translateY(-2px);
-        }
-        
-        .profile-card-default {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-        
-        .has-bg-image {
-            position: relative;
-        }
-        
-        .profile-card-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.6) 100%);
-            border-radius: 24px;
-        }
-        
-        .profile-card {
-            position: relative;
-        }
-        
+
         .profile-bio {
             color: white;
             line-height: 1.7;
-            position: relative;
-            z-index: 1;
-            width: 100%;
         }
-        
+
         .profile-bio p {
             margin-bottom: 12px;
             font-size: 14px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
-        
+
         .profile-bio p:last-child {
             margin-bottom: 0;
         }
-        
+
         /* 右侧边栏 */
         .sidebar-right {
             width: 340px;
@@ -331,7 +225,7 @@
             display: flex;
             flex-direction: column;
         }
-        
+
         .article-list-area {
             background: rgba(255,255,255,0.95);
             backdrop-filter: blur(10px);
@@ -342,13 +236,8 @@
             display: flex;
             flex-direction: column;
             flex: 1;
-            transition: transform 0.3s ease;
         }
-        
-        .article-list-area:hover {
-            transform: translateY(-2px);
-        }
-        
+
         .article-list-area h3 {
             font-size: 15px;
             color: #4a5568;
@@ -358,122 +247,88 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            flex-shrink: 0;
-            letter-spacing: 0.5px;
         }
-        
+
         .article-list-area h3::before {
             content: '📖';
-            font-size: 16px;
         }
-        
+
         .article-list {
             display: flex;
             flex-direction: column;
             gap: 10px;
             flex: 1;
             overflow-y: auto;
-            padding-right: 4px;
         }
-        
+
         .article-list::-webkit-scrollbar {
             width: 5px;
         }
-        
+
         .article-list::-webkit-scrollbar-track {
             background: #e2e8f0;
             border-radius: 10px;
         }
-        
+
         .article-list::-webkit-scrollbar-thumb {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border-radius: 10px;
         }
-        
+
         .article-item {
             padding: 12px 14px;
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            background: #f8fafc;
             border-radius: 14px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s;
             border: 1px solid #e2e8f0;
             cursor: pointer;
         }
-        
+
         .article-item:hover {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             transform: translateX(6px);
-            border-color: transparent;
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
         }
-        
-        .article-item:hover .article-title a {
+
+        .article-item:hover .article-title {
             color: white;
         }
-        
+
         .article-item:hover .article-meta {
             color: rgba(255,255,255,0.8);
         }
-        
-        .article-item:hover .article-source {
-            background: rgba(255,255,255,0.2);
-            color: white;
-        }
-        
+
         .article-title {
             font-size: 14px;
             font-weight: 600;
             margin-bottom: 6px;
-        }
-        
-        .article-title a {
             color: #2d3748;
-            text-decoration: none;
-            transition: color 0.2s;
         }
-        
+
         .article-meta {
             font-size: 11px;
             color: #a0aec0;
             display: flex;
             gap: 10px;
-            transition: color 0.2s;
         }
-        
-        .article-source {
-            background: #e2e8f0;
-            padding: 2px 6px;
-            border-radius: 20px;
-            font-size: 9px;
-            color: #4a5568;
-            transition: all 0.2s;
-        }
-        
-        /* 响应式 */
+
         @media (max-width: 1000px) {
             .container {
                 flex-direction: column;
-                padding: 16px;
             }
             .sidebar-left, .sidebar-right {
                 width: 100%;
             }
-            .shortcuts-area, .article-list-area {
-                min-height: 280px;
-                flex: 0 0 auto;
-            }
             .shortcut-buttons {
                 flex-direction: row;
                 flex-wrap: wrap;
-                overflow-y: visible;
             }
             .shortcut {
                 flex: 1;
-                min-width: 90px;
+                min-width: 80px;
             }
             .article-list {
                 flex-direction: row;
                 flex-wrap: wrap;
-                overflow-y: visible;
             }
             .article-item {
                 flex: 1;
@@ -485,37 +340,6 @@
             .header-bg h1 {
                 font-size: 28px;
             }
-            .profile-card {
-                padding: 22px 24px;
-            }
-            .profile-bio p {
-                font-size: 13px;
-                margin-bottom: 10px;
-            }
-        }
-        
-        /* 加载动画 */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .sidebar-left, .content-center, .sidebar-right {
-            animation: fadeInUp 0.5s ease-out;
-        }
-        
-        .content-center {
-            animation-delay: 0.1s;
-        }
-        
-        .sidebar-right {
-            animation-delay: 0.2s;
         }
     </style>
 </head>
@@ -524,9 +348,7 @@
 <div class="container">
     <div class="sidebar-left">
         <div class="logo-area">
-            <div class="logo" id="logoContainer">
-                <div class="logo-text" id="defaultLogo">ZM</div>
-            </div>
+            <div class="logo">ZM</div>
             <div class="beijing-time" id="beijingTime"></div>
         </div>
         <div class="shortcuts-area">
@@ -537,19 +359,18 @@
 
     <div class="content-center">
         <div class="blog-header">
-            <div class="header-bg" id="headerBg">
+            <div class="header-bg">
                 <h1>张小明的博客</h1>
                 <p>记录思考 · 分享技术 · 共同成长</p>
             </div>
         </div>
-        
-        <div class="profile-card profile-card-default" id="profileCard">
+        <div class="profile-card">
             <div class="profile-bio">
                 <p>🌟 你好！我是一名热爱技术的全栈开发工程师，拥有5年Web开发经验。</p>
-                <p>📝 这个博客主要分享前端开发、后端架构、云原生技术等方面的学习心得和实践经验。</p>
-                <p>🎯 我相信技术应该服务于人，希望通过持续写作帮助更多人成长。</p>
+                <p>📝 这个博客主要分享前端开发、后端架构、云原生技术等方面的学习心得。</p>
+                <p>🎯 我相信技术应该服务于人，希望通过写作帮助更多人成长。</p>
                 <p>📧 联系我：xiaoming.zhang@example.com</p>
-                <p>💡 点击右侧文章列表，可以直接跳转到我的博客文章或其他优质技术文章。</p>
+                <p>💡 点击右侧文章列表，直接跳转查看文章。</p>
             </div>
         </div>
     </div>
@@ -572,13 +393,12 @@ function updateBeijingTime() {
     var hours = String(now.getHours()).padStart(2, '0');
     var minutes = String(now.getMinutes()).padStart(2, '0');
     var seconds = String(now.getSeconds()).padStart(2, '0');
-    var timeString = year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds;
-    document.getElementById('beijingTime').innerHTML = timeString;
+    document.getElementById('beijingTime').innerHTML = year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds;
 }
 updateBeijingTime();
 setInterval(updateBeijingTime, 1000);
 
-// ========== 快捷按钮列表 ==========
+// 快捷按钮
 var shortcuts = [
     ['GitHub', 'https://github.com'],
     ['掘金', 'https://juejin.cn'],
@@ -589,80 +409,80 @@ var shortcuts = [
     ['Tailwind CSS', 'https://tailwindcss.com'],
     ['MDN', 'https://developer.mozilla.org'],
     ['Stack Overflow', 'https://stackoverflow.com'],
-    ['Google', 'https://google.com'],
+    ['Google', 'https://google.com']
 ];
 
-function renderShortcuts() {
-    var html = '';
-    for (var i = 0; i < shortcuts.length; i++) {
-        html = html + '<a class="shortcut" href="' + shortcuts[i][1] + '" target="_blank" rel="noopener noreferrer">' + shortcuts[i][0] + '</a>';
-    }
-    document.getElementById('shortcutList').innerHTML = html;
+var shortcutHtml = '';
+for (var i = 0; i < shortcuts.length; i++) {
+    shortcutHtml += '<a class="shortcut" href="' + shortcuts[i][1] + '" target="_blank">' + shortcuts[i][0] + '</a>';
 }
-renderShortcuts();
+document.getElementById('shortcutList').innerHTML = shortcutHtml;
 
-// ========== 文章列表 ==========
+// ========== 文章数据（直接在这里添加/删除文章） ==========
 var articles = [
-    { title: '欢迎来到我的博客', date: '2026-04-26', source: '本站', url: 'https://raw.githubusercontent.com/你的用户名/仓库名/main/posts/welcome.md' },
-    { title: 'EdgeOne Pages 部署教程', date: '2026-04-25', source: '本站', url: 'https://raw.githubusercontent.com/你的用户名/仓库名/main/posts/edgeone-tutorial.md' },
-    { title: 'Vue 3 完整指南', date: '2026-04-20', source: 'Vue官方', url: 'https://vuejs.org/guide/introduction.html' },
-    { title: 'React 18 新特性', date: '2026-04-18', source: 'React官方', url: 'https://react.dev/blog/2022/03/29/react-v18' },
-    { title: '前端性能优化完全指南', date: '2026-04-10', source: '掘金', url: 'https://juejin.cn/post/123456789' },
-    { title: 'TypeScript 入门前端', date: '2026-04-05', source: '知乎', url: 'https://zhuanlan.zhihu.com/p/123456789' },
+    {
+        title: '欢迎来到我的博客',
+        date: '2026-04-26',
+        content: '<h1>欢迎来到我的博客</h1><p>大家好！欢迎访问我的个人博客。</p><h2>为什么写博客？</h2><p>记录技术成长、分享学习心得。</p><ul><li>加深理解</li><li>帮助他人</li><li>建立品牌</li></ul>'
+    },
+    {
+        title: 'EdgeOne Pages 部署教程',
+        date: '2026-04-25',
+        content: '<h1>EdgeOne Pages 部署教程</h1><p>腾讯云 EdgeOne Pages 是一个强大的静态网站托管平台。</p><h2>部署步骤</h2><ol><li>登录腾讯云</li><li>导入Git仓库</li><li>点击部署</li></ol>'
+    },
+    {
+        title: 'Markdown 写作指南',
+        date: '2026-04-24',
+        content: '<h1>Markdown 写作指南</h1><p>Markdown是一种轻量级标记语言。</p><h2>基础语法</h2><ul><li>标题：使用#</li><li>列表：使用-</li><li>粗体：**文字**</li></ul>'
+    },
+    {
+        title: 'Vue.js 入门教程',
+        date: '2026-04-20',
+        content: '<h1>Vue.js 入门教程</h1><p>Vue.js是一个渐进式JavaScript框架。</p><h2>核心特性</h2><ul><li>响应式数据绑定</li><li>组件化开发</li><li>虚拟DOM</li></ul>'
+    },
+    {
+        title: 'React 快速上手',
+        date: '2026-04-18',
+        content: '<h1>React 快速上手</h1><p>React是一个用于构建用户界面的JavaScript库。</p><h2>核心概念</h2><ul><li>组件</li><li>State</li><li>Props</li><li>Hooks</li></ul>'
+    }
 ];
 
-function renderArticleList() {
-    var html = '';
-    for (var i = 0; i < articles.length; i++) {
-        var a = articles[i];
-        html = html + '<div class="article-item">';
-        html = html + '<div class="article-title"><a href="' + a.url + '" target="_blank" rel="noopener noreferrer">' + a.title + '</a></div>';
-        html = html + '<div class="article-meta">';
-        html = html + '<span>📅 ' + a.date + '</span>';
-        html = html + '<span class="article-source">' + a.source + '</span>';
-        html = html + '</div>';
-        html = html + '</div>';
-    }
-    document.getElementById('articleList').innerHTML = html;
-}
-renderArticleList();
-
-// ==================== 图片配置区域 ====================
-var logoImageUrl = '';
-var headerBgImageUrl = '';
-var cardBgImageUrl = '';
-
-if (logoImageUrl) {
-    var logoContainer = document.getElementById('logoContainer');
-    logoContainer.innerHTML = '<img src="' + logoImageUrl + '" alt="Logo">';
+// 显示文章
+function showArticle(index) {
+    var a = articles[index];
+    var win = window.open();
+    var html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>' + a.title + '</title>';
+    html += '<style>';
+    html += 'body{font-family:Arial;max-width:800px;margin:0 auto;padding:40px;line-height:1.8;}';
+    html += 'h1{color:#2d3748;}';
+    html += '.date{color:#999;margin-bottom:20px;}';
+    html += 'hr{margin:20px 0;}';
+    html += 'ul,ol{margin-left:30px;}';
+    html += '</style>';
+    html += '</head><body>';
+    html += '<h1>' + a.title + '</h1>';
+    html += '<div class="date">📅 ' + a.date + '</div><hr>';
+    html += a.content;
+    html += '<hr><p><a href="javascript:window.close()">关闭窗口</a></p>';
+    html += '</body></html>';
+    win.document.write(html);
+    win.document.close();
 }
 
-var headerBg = document.getElementById('headerBg');
-if (headerBgImageUrl) {
-    headerBg.style.backgroundImage = 'url(' + headerBgImageUrl + ')';
-    headerBg.style.backgroundSize = 'cover';
-    headerBg.style.backgroundPosition = 'center';
-    headerBg.style.backgroundRepeat = 'no-repeat';
-    headerBg.classList.remove('header-bg-default');
-} else {
-    headerBg.classList.add('header-bg-default');
-}
+window.showArticle = showArticle;
 
-var profileCard = document.getElementById('profileCard');
-if (cardBgImageUrl) {
-    profileCard.style.backgroundImage = 'url(' + cardBgImageUrl + ')';
-    profileCard.style.backgroundSize = 'cover';
-    profileCard.style.backgroundPosition = 'center';
-    profileCard.style.backgroundRepeat = 'no-repeat';
-    profileCard.classList.remove('profile-card-default');
-    profileCard.classList.add('has-bg-image');
-    profileCard.style.position = 'relative';
-    var overlay = document.createElement('div');
-    overlay.className = 'profile-card-bg';
-    profileCard.insertBefore(overlay, profileCard.firstChild);
-} else {
-    profileCard.classList.add('profile-card-default');
+// 渲染文章列表
+var articleHtml = '';
+for (var i = 0; i < articles.length; i++) {
+    var a = articles[i];
+    var excerpt = a.content.replace(/<[^>]*>/g, '').substring(0, 80);
+    if (excerpt.length >= 80) excerpt += '...';
+    articleHtml += '<div class="article-item" onclick="showArticle(' + i + ')">';
+    articleHtml += '<div class="article-title">' + a.title + '</div>';
+    articleHtml += '<div class="article-meta">📅 ' + a.date + ' | ' + excerpt + '</div>';
+    articleHtml += '</div>';
 }
+document.getElementById('articleList').innerHTML = articleHtml;
 </script>
 
 </body>
