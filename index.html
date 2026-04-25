@@ -57,7 +57,6 @@
             object-fit: cover;
         }
         
-        /* 默认文字LOGO（当没有图片时显示） */
         .logo-text {
             width: 120px;
             height: 120px;
@@ -130,7 +129,6 @@
             min-width: 0;
         }
         
-        /* 页眉背景图区域 */
         .blog-header {
             margin-bottom: 30px;
             border-radius: 20px;
@@ -145,7 +143,6 @@
             text-align: center;
         }
         
-        /* 默认渐变色背景 */
         .header-bg-default {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
@@ -163,7 +160,6 @@
             text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
         }
         
-        /* 简介卡片 */
         .profile-card {
             border-radius: 20px;
             padding: 40px;
@@ -172,12 +168,10 @@
             background-position: center;
         }
         
-        /* 默认渐变色背景（与页眉统一） */
         .profile-card-default {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
         
-        /* 有背景图时的遮罩 */
         .profile-card-bg {
             position: absolute;
             top: 0;
@@ -234,6 +228,27 @@
             display: flex;
             flex-direction: column;
             gap: 12px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        
+        /* 自定义滚动条 */
+        .article-list::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .article-list::-webkit-scrollbar-track {
+            background: #e2e8f0;
+            border-radius: 3px;
+        }
+        
+        .article-list::-webkit-scrollbar-thumb {
+            background: #cbd5e0;
+            border-radius: 3px;
+        }
+        
+        .article-list::-webkit-scrollbar-thumb:hover {
+            background: #a0aec0;
         }
         
         .article-item {
@@ -299,6 +314,7 @@
             .article-list {
                 flex-direction: row;
                 flex-wrap: wrap;
+                max-height: none;
             }
             .article-item {
                 flex: 1;
@@ -319,11 +335,9 @@
 <body>
 
 <div class="container">
-    <!-- 左侧边栏：LOGO + 快捷按钮 -->
     <div class="sidebar-left">
         <div class="logo-area">
             <div class="logo" id="logoContainer">
-                <!-- 默认文字LOGO -->
                 <div class="logo-text" id="defaultLogo">BLOG</div>
             </div>
             <div class="beijing-time" id="beijingTime"></div>
@@ -334,9 +348,7 @@
         </div>
     </div>
 
-    <!-- 中间区域 -->
     <div class="content-center">
-        <!-- 页眉带背景图 -->
         <div class="blog-header">
             <div class="header-bg" id="headerBg">
                 <h1>张小明的博客</h1>
@@ -344,19 +356,8 @@
             </div>
         </div>
         
-        <!-- 简介卡片 -->
         <div class="profile-card profile-card-default" id="profileCard">
             <div class="profile-bio">
-                <p>👋 你好！我是一名热爱技术的全栈开发工程师，有5年Web开发经验。</p>
-                <p>📝 这个博客主要分享前端开发、后端架构、云原生技术等方面的学习心得和实践经验。</p>
-                <p>🎯 我相信技术应该服务于人，希望通过写作帮助更多人成长。</p>
-                <p>📧 联系我：xiaoming.zhang@example.com</p>
-                <p>💡 点击右侧文章列表，可以直接跳转到我的博客文章或其他优质技术文章。</p>
-                <p>👋 你好！我是一名热爱技术的全栈开发工程师，有5年Web开发经验。</p>
-                <p>📝 这个博客主要分享前端开发、后端架构、云原生技术等方面的学习心得和实践经验。</p>
-                <p>🎯 我相信技术应该服务于人，希望通过写作帮助更多人成长。</p>
-                <p>📧 联系我：xiaoming.zhang@example.com</p>
-                <p>💡 点击右侧文章列表，可以直接跳转到我的博客文章或其他优质技术文章。</p>
                 <p>👋 你好！我是一名热爱技术的全栈开发工程师，有5年Web开发经验。</p>
                 <p>📝 这个博客主要分享前端开发、后端架构、云原生技术等方面的学习心得和实践经验。</p>
                 <p>🎯 我相信技术应该服务于人，希望通过写作帮助更多人成长。</p>
@@ -366,10 +367,9 @@
         </div>
     </div>
 
-    <!-- 右侧边栏：文章列表 -->
     <div class="sidebar-right">
         <div class="article-list-area">
-            <h3>📚 推荐文章</h3>
+            <h3>📚 文章列表</h3>
             <div class="article-list" id="articleList"></div>
         </div>
     </div>
@@ -406,77 +406,21 @@ for (var i = 0; i < shortcutNames.length; i++) {
 }
 document.getElementById('shortcutList').innerHTML = shortcutHtml;
 
-// 文章列表
+// ========== 文章列表 - 在这里添加/删除文章 ==========
+// 添加文章：复制下面格式，在最后添加
+// { title: '文章标题', date: '2026-04-27', source: '来源', url: 'https://链接' },
+
 var articles = [
-    {
-        title: '欢迎来到我的博客',
-        date: '2026-04-26',
-        source: '本站',
-        url: 'https://raw.githubusercontent.com/你的用户名/仓库名/main/posts/welcome.md'
-    },
-    {
-        title: 'EdgeOne Pages 部署教程',
-        date: '2026-04-25',
-        source: '本站',
-        url: 'https://raw.githubusercontent.com/你的用户名/仓库名/main/posts/edgeone-tutorial.md'
-    },
-    {
-        title: 'Vue 3 完整指南',
-        date: '2026-04-20',
-        source: 'Vue官方',
-        url: 'https://vuejs.org/guide/introduction.html'
-    },
-    {
-        title: 'React 18 新特性',
-        date: '2026-04-18',
-        source: 'React官方',
-        url: 'https://react.dev/blog/2022/03/29/react-v18'
-    },
-    {
-        title: '前端性能优化完全指南',
-        date: '2026-04-10',
-        source: '掘金',
-        url: 'https://juejin.cn/post/123456789'
-    },
-    {
-        title: 'TypeScript 入门前端',
-        date: '2026-04-05',
-        source: '知乎',
-        url: 'https://zhuanlan.zhihu.com/p/123456789'
-    }
-    {
-        title: 'TypeScript 入门前端',
-        date: '2026-04-05',
-        source: '知乎',
-        url: 'https://zhuanlan.zhihu.com/p/123456789'
-    }
-    {
-        title: 'TypeScript 入门前端',
-        date: '2026-04-05',
-        source: '知乎',
-        url: 'https://zhuanlan.zhihu.com/p/123456789'
-    }
-    {
-        title: 'TypeScript 入门前端',
-        date: '2026-04-05',
-        source: '知乎',
-        url: 'https://zhuanlan.zhihu.com/p/123456789'
-    }
-    {
-        title: 'TypeScript 入门前端',
-        date: '2026-04-05',
-        source: '知乎',
-        url: 'https://zhuanlan.zhihu.com/p/123456789'
-    }
-    {
-        title: 'TypeScript 入门前端',
-        date: '2026-04-05',
-        source: '知乎',
-        url: 'https://zhuanlan.zhihu.com/p/123456789'
-    }
+    { title: '欢迎来到我的博客', date: '2026-04-26', source: '本站', url: 'https://raw.githubusercontent.com/你的用户名/仓库名/main/posts/welcome.md' },
+    { title: 'EdgeOne Pages 部署教程', date: '2026-04-25', source: '本站', url: 'https://raw.githubusercontent.com/你的用户名/仓库名/main/posts/edgeone-tutorial.md' },
+    { title: 'Vue 3 完整指南', date: '2026-04-20', source: 'Vue官方', url: 'https://vuejs.org/guide/introduction.html' },
+    { title: 'React 18 新特性', date: '2026-04-18', source: 'React官方', url: 'https://react.dev/blog/2022/03/29/react-v18' },
+    { title: '前端性能优化完全指南', date: '2026-04-10', source: '掘金', url: 'https://juejin.cn/post/123456789' },
+    { title: 'TypeScript 入门前端', date: '2026-04-05', source: '知乎', url: 'https://zhuanlan.zhihu.com/p/123456789' },
+    // 在这里继续添加更多文章...
 ];
 
-// 渲染右侧文章列表
+// 渲染右侧文章列表（自动延伸）
 function renderArticleList() {
     var html = '';
     for (var i = 0; i < articles.length; i++) {
@@ -495,27 +439,15 @@ function renderArticleList() {
 renderArticleList();
 
 // ========== 自定义图片配置 ==========
-// 在这里填写你的图片URL，留空则使用默认渐变色背景
-
-// 1. LOGO图片 (建议 120x120 像素)
-// 例如: 'https://example.com/logo.png' 或 './images/logo.png'
 var logoImageUrl = '';
-
-// 2. 页眉背景图 (建议 1400x300)
-// 例如: 'https://example.com/header-bg.jpg' 或 './images/header-bg.jpg'
 var headerBgImageUrl = '';
-
-// 3. 简介卡片背景图 (建议 800x400)
-// 例如: 'https://example.com/card-bg.jpg' 或 './images/card-bg.jpg'
 var cardBgImageUrl = '';
 
-// 应用LOGO图片
 if (logoImageUrl) {
     var logoContainer = document.getElementById('logoContainer');
     logoContainer.innerHTML = '<img src="' + logoImageUrl + '" alt="Logo">';
 }
 
-// 应用页眉背景图
 if (headerBgImageUrl) {
     var headerBg = document.getElementById('headerBg');
     headerBg.style.backgroundImage = 'url(' + headerBgImageUrl + ')';
@@ -526,20 +458,17 @@ if (headerBgImageUrl) {
     headerBg.classList.add('header-bg-default');
 }
 
-// 应用简介卡片背景图（如果没有图片，保持默认渐变色）
 if (cardBgImageUrl) {
     var profileCard = document.getElementById('profileCard');
     profileCard.style.backgroundImage = 'url(' + cardBgImageUrl + ')';
     profileCard.style.backgroundSize = 'cover';
     profileCard.style.backgroundPosition = 'center';
     profileCard.classList.remove('profile-card-default');
-    // 添加半透明遮罩让文字更清晰
     profileCard.style.position = 'relative';
     var overlay = document.createElement('div');
     overlay.className = 'profile-card-bg';
     profileCard.insertBefore(overlay, profileCard.firstChild);
 } else {
-    // 默认使用渐变色背景（与页眉统一）
     profileCard.classList.add('profile-card-default');
 }
 </script>
