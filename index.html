@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>博  客</title>
+    <title>张小明的博客</title>
     <style>
         * {
             margin: 0;
@@ -46,12 +46,26 @@
         .logo {
             width: 120px;
             height: 120px;
+            margin: 0 auto 15px;
+            border-radius: 60px;
+            overflow: hidden;
+        }
+        
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        /* 默认文字LOGO（当没有图片时显示） */
+        .logo-text {
+            width: 120px;
+            height: 120px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 15px;
             border-radius: 60px;
             font-size: 24px;
             font-weight: bold;
@@ -110,43 +124,88 @@
             border-color: #3182ce;
         }
         
-        /* 中间区域 - 个人简介 */
+        /* 中间区域 */
         .content-center {
             flex: 1;
             min-width: 0;
         }
         
+        /* 页眉背景图区域 */
         .blog-header {
             margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid #e2e8f0;
-        }
-        
-        .blog-header h1 {
-            font-size: 28px;
-            color: #2d3748;
-            margin-bottom: 8px;
-        }
-        
-        .profile-card {
-            background: white;
             border-radius: 20px;
-            padding: 32px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .header-bg {
+            background-size: cover;
+            background-position: center;
+            background-color: #667eea;
+            padding: 60px 40px;
+            text-align: center;
+            position: relative;
+        }
+        
+        /* 默认渐变色背景（当没有图片时显示） */
+        .header-bg-default {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .header-bg h1 {
+            font-size: 42px;
+            color: white;
+            margin-bottom: 12px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .header-bg p {
+            color: rgba(255,255,255,0.9);
+            font-size: 18px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+        
+        /* 简介卡片带背景图 */
+        .profile-card {
+            border-radius: 20px;
+            padding: 40px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            background-size: cover;
+            background-position: center;
+            position: relative;
         }
         
-        .profile-name {
-            font-size: 24px;
-            color: #2d3748;
-            margin-bottom: 8px;
+        /* 默认背景色（当没有图片时显示） */
+        .profile-card-default {
+            background: white;
         }
         
-        .profile-title {
-            color: #718096;
-            font-size: 14px;
-            margin-bottom: 24px;
-            padding-bottom: 24px;
-            border-bottom: 1px solid #e2e8f0;
+        /* 半透明遮罩，让文字更清晰 */
+        .profile-card-overlay {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .profile-card-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            border-radius: 20px;
+            z-index: 0;
+        }
+        
+        .profile-card .profile-bio {
+            position: relative;
+            z-index: 1;
+            color: white;
+        }
+        
+        /* 有背景图时文字变白色 */
+        .profile-card.has-bg .profile-bio {
+            color: white;
         }
         
         .profile-bio {
@@ -158,7 +217,7 @@
             margin-bottom: 16px;
         }
         
-        /* 右侧边栏 - 文章列表 */
+        /* 右侧边栏 */
         .sidebar-right {
             width: 320px;
             flex-shrink: 0;
@@ -259,6 +318,12 @@
                 flex: 1;
                 min-width: 200px;
             }
+            .header-bg {
+                padding: 40px 20px;
+            }
+            .header-bg h1 {
+                font-size: 28px;
+            }
         }
     </style>
 </head>
@@ -268,7 +333,10 @@
     <!-- 左侧边栏：LOGO + 快捷按钮 -->
     <div class="sidebar-left">
         <div class="logo-area">
-            <div class="logo">BLOG</div>
+            <div class="logo" id="logoContainer">
+                <!-- 默认文字LOGO -->
+                <div class="logo-text" id="defaultLogo">BLOG</div>
+            </div>
             <div class="beijing-time" id="beijingTime"></div>
         </div>
         <div class="shortcuts-area">
@@ -277,13 +345,18 @@
         </div>
     </div>
 
-    <!-- 中间区域：个人简介 -->
+    <!-- 中间区域 -->
     <div class="content-center">
+        <!-- 页眉带背景图 -->
         <div class="blog-header">
-            <h1>张小明的博客</h1>
-            <p>记录思考，分享技术</p>
+            <div class="header-bg" id="headerBg">
+                <h1>张小明的博客</h1>
+                <p>记录思考，分享技术</p>
+            </div>
         </div>
-        <div class="profile-card">
+        
+        <!-- 简介卡片带背景图 -->
+        <div class="profile-card" id="profileCard">
             <div class="profile-bio">
                 <p>👋 你好！我是一名热爱技术的全栈开发工程师，有5年Web开发经验。</p>
                 <p>📝 这个博客主要分享前端开发、后端架构、云原生技术等方面的学习心得和实践经验。</p>
@@ -391,6 +464,54 @@ function renderArticleList() {
 }
 
 renderArticleList();
+
+// ========== 自定义图片配置 ==========
+// 在这里填写你的图片URL，留空则使用默认样式
+
+// 1. LOGO图片 (建议 120x120 像素)
+// 例如: 'https://example.com/logo.png' 或 './images/logo.png'
+var logoImageUrl = '';
+
+// 2. 页眉背景图 (建议宽像素 1400x300)
+// 例如: 'https://example.com/header-bg.jpg' 或 './images/header-bg.jpg'
+var headerBgImageUrl = '';
+
+// 3. 简介卡片背景图 (建议宽像素 800x400)
+// 例如: 'https://example.com/card-bg.jpg' 或 './images/card-bg.jpg'
+var cardBgImageUrl = '';
+
+// 应用LOGO图片
+if (logoImageUrl) {
+    var logoContainer = document.getElementById('logoContainer');
+    logoContainer.innerHTML = '<img src="' + logoImageUrl + '" alt="Logo">';
+}
+
+// 应用页眉背景图
+if (headerBgImageUrl) {
+    var headerBg = document.getElementById('headerBg');
+    headerBg.style.backgroundImage = 'url(' + headerBgImageUrl + ')';
+    headerBg.style.backgroundSize = 'cover';
+    headerBg.style.backgroundPosition = 'center';
+} else {
+    // 默认渐变色
+    headerBg.classList.add('header-bg-default');
+}
+
+// 应用简介卡片背景图
+if (cardBgImageUrl) {
+    var profileCard = document.getElementById('profileCard');
+    profileCard.style.backgroundImage = 'url(' + cardBgImageUrl + ')';
+    profileCard.style.backgroundSize = 'cover';
+    profileCard.style.backgroundPosition = 'center';
+    profileCard.classList.add('has-bg');
+    // 添加半透明遮罩让文字更清晰
+    profileCard.style.position = 'relative';
+    var overlay = document.createElement('div');
+    overlay.className = 'profile-card-bg';
+    profileCard.insertBefore(overlay, profileCard.firstChild);
+} else {
+    profileCard.classList.add('profile-card-default');
+}
 </script>
 
 </body>
