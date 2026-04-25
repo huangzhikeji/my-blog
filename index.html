@@ -4,132 +4,424 @@
     <meta charset="UTF-8">
     <title>My Blog</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
-            font-family: Arial, sans-serif;
-            max-width: 1000px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: #f5f7fa;
+            color: #1a202c;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
+            display: flex;
+            gap: 30px;
         }
+        
+        /* 侧边栏 */
+        .sidebar {
+            width: 300px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+        }
+        
+        /* LOGO区域 */
+        .logo-area {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
         .logo {
             width: 120px;
             height: 120px;
-            background: navy;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            display: inline-block;
-            text-align: center;
-            line-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
             border-radius: 60px;
+            font-size: 24px;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
-        .time {
-            margin: 10px 0;
-            font-size: 18px;
-        }
-        .shortcut {
+        
+        .beijing-time {
+            font-size: 20px;
+            font-weight: 600;
+            color: #2d3748;
+            background: #edf2f7;
+            padding: 10px 16px;
+            border-radius: 12px;
             display: inline-block;
-            margin: 5px;
-            padding: 5px 10px;
-            background: #eee;
+            font-family: monospace;
+        }
+        
+        /* 快捷按钮区域 */
+        .shortcuts-area {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .shortcuts-area h3 {
+            font-size: 16px;
+            color: #4a5568;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        
+        .shortcut-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .shortcut {
+            display: block;
+            padding: 10px 16px;
+            background: #f7fafc;
+            border-radius: 10px;
             text-decoration: none;
-            color: black;
-            border-radius: 5px;
+            color: #3182ce;
+            font-weight: 500;
+            border: 1px solid #e2e8f0;
+            text-align: center;
+            transition: all 0.2s;
         }
-        .post {
-            border-bottom: 1px solid #ccc;
-            padding: 20px 0;
+        
+        .shortcut:hover {
+            background: #3182ce;
+            color: white;
+            transform: translateX(4px);
+            border-color: #3182ce;
         }
-        .post h2 a {
+        
+        /* 主内容区 */
+        .main-content {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .blog-header {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        
+        .blog-header h1 {
+            font-size: 32px;
+            color: #2d3748;
+            margin-bottom: 8px;
+        }
+        
+        .blog-header p {
+            color: #718096;
+            font-size: 16px;
+        }
+        
+        /* 文章列表 */
+        .posts-list {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        
+        .post-card {
+            background: white;
+            border-radius: 20px;
+            padding: 28px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .post-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+        }
+        
+        .post-title {
+            font-size: 24px;
+            margin-bottom: 12px;
+        }
+        
+        .post-title a {
+            color: #2d3748;
             text-decoration: none;
-            color: #333;
         }
-        .post h2 a:hover {
-            color: blue;
+        
+        .post-title a:hover {
+            color: #3182ce;
         }
+        
+        .post-meta {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 16px;
+            font-size: 14px;
+            color: #a0aec0;
+        }
+        
+        .post-excerpt {
+            color: #4a5568;
+            margin-bottom: 16px;
+            line-height: 1.7;
+        }
+        
         .readmore {
             display: inline-block;
-            margin-top: 10px;
-            color: blue;
-            cursor: pointer;
+            color: #3182ce;
             text-decoration: none;
+            font-weight: 500;
         }
+        
+        .readmore:hover {
+            text-decoration: underline;
+        }
+        
         .loading {
             text-align: center;
-            padding: 50px;
-            color: #999;
+            padding: 60px;
+            color: #a0aec0;
+        }
+        
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                position: static;
+            }
+            .shortcut-buttons {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+            .shortcut {
+                flex: 1;
+                min-width: 80px;
+            }
         }
     </style>
 </head>
 <body>
 
-<div style="text-align: center;">
-    <div class="logo">BLOG</div>
-    <div class="time" id="time"></div>
-    <div id="shortcuts"></div>
+<div class="container">
+    <!-- 侧边栏 -->
+    <aside class="sidebar">
+        <div class="logo-area">
+            <div class="logo">BLOG</div>
+            <div class="beijing-time" id="displayTime"></div>
+        </div>
+        <div class="shortcuts-area">
+            <h3>快捷链接</h3>
+            <div class="shortcut-buttons" id="shortcutList"></div>
+        </div>
+    </aside>
+
+    <!-- 主内容 -->
+    <main class="main-content">
+        <div class="blog-header">
+            <h1>我的博客</h1>
+            <p>记录思考，分享技术</p>
+        </div>
+        <div id="postList" class="posts-list">
+            <div class="loading">加载文章中...</div>
+        </div>
+    </main>
 </div>
 
-<div id="posts"><div class="loading">Loading posts...</div></div>
-
 <script>
-// Time
-function showTime() {
-    var d = new Date();
-    var h = d.getHours();
-    var m = d.getMinutes();
-    var s = d.getSeconds();
-    if (h < 10) h = '0' + h;
-    if (m < 10) m = '0' + m;
-    if (s < 10) s = '0' + s;
-    document.getElementById('time').innerHTML = h + ':' + m + ':' + s;
+// 更新时间
+function updateTime() {
+    var now = new Date();
+    var hours = now.getHours();
+    var minutes = now.getMinutes();
+    var seconds = now.getSeconds();
+    if (hours < 10) hours = '0' + hours;
+    if (minutes < 10) minutes = '0' + minutes;
+    if (seconds < 10) seconds = '0' + seconds;
+    document.getElementById('displayTime').innerHTML = hours + ':' + minutes + ':' + seconds;
 }
-showTime();
-setInterval(showTime, 1000);
+updateTime();
+setInterval(updateTime, 1000);
 
-// Shortcuts
-var sites = ['GitHub', 'Google', 'StackOverflow', 'Juejin', 'Zhihu', 'RuanYifeng', 'Vue', 'React', 'Tailwind', 'MDN'];
-var urls = ['https://github.com', 'https://google.com', 'https://stackoverflow.com', 'https://juejin.cn', 'https://zhihu.com', 'https://ruanyifeng.com', 'https://vuejs.org', 'https://reactjs.org', 'https://tailwindcss.com', 'https://developer.mozilla.org'];
-
-var shortcutHtml = '';
-for (var i = 0; i < sites.length; i++) {
-    shortcutHtml = shortcutHtml + '<a class="shortcut" href="' + urls[i] + '" target="_blank">' + sites[i] + '</a>';
-}
-document.getElementById('shortcuts').innerHTML = shortcutHtml;
-
-// Posts data (hardcoded first, will load from md later)
-var posts = [
-    {title: 'Welcome to My Blog', date: '2026-04-26', content: '<p>Welcome to my blog. This is the first post.</p><h2>Why Blog?</h2><p>Share knowledge and experiences.</p>', excerpt: 'Welcome to my blog. This is the first post.'},
-    {title: 'EdgeOne Pages Tutorial', date: '2026-04-25', content: '<p>EdgeOne Pages is a great platform for static sites.</p><h2>Steps</h2><ol><li>Login</li><li>Import repo</li><li>Deploy</li></ol>', excerpt: 'EdgeOne Pages is a great platform for static sites.'},
-    {title: 'Markdown Guide', date: '2026-04-24', content: '<p>Markdown is a lightweight markup language.</p><h2>Syntax</h2><ul><li>Headers: #</li><li>Lists: -</li><li>Bold: **</li></ul>', excerpt: 'Markdown is a lightweight markup language.'}
+// 快捷按钮
+var linkNames = ['GitHub', 'Google', 'Stack Overflow', '掘金', '知乎', '阮一峰', 'Vue', 'React', 'Tailwind', 'MDN'];
+var linkUrls = [
+    'https://github.com',
+    'https://google.com',
+    'https://stackoverflow.com',
+    'https://juejin.cn',
+    'https://zhihu.com',
+    'https://ruanyifeng.com',
+    'https://vuejs.org',
+    'https://reactjs.org',
+    'https://tailwindcss.com',
+    'https://developer.mozilla.org'
 ];
 
-// Show post
-function viewPost(idx) {
-    var p = posts[idx];
+var shortcutHtml = '';
+for (var i = 0; i < linkNames.length; i++) {
+    shortcutHtml = shortcutHtml + '<a class="shortcut" href="' + linkUrls[i] + '" target="_blank">' + linkNames[i] + '</a>';
+}
+document.getElementById('shortcutList').innerHTML = shortcutHtml;
+
+// 文章配置
+var articles = [
+    {title: '欢迎来到我的博客', date: '2026-04-26', file: 'posts/welcome.md'},
+    {title: 'EdgeOne Pages 部署教程', date: '2026-04-25', file: 'posts/edgeone-tutorial.md'},
+    {title: 'Markdown 写作指南', date: '2026-04-24', file: 'posts/markdown-guide.md'}
+];
+
+var loadedArticles = [];
+
+// 显示文章
+function viewArticle(index) {
+    var a = loadedArticles[index];
+    if (!a) return;
     var w = window.open();
-    var doc = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>' + p.title + '</title>';
-    doc = doc + '<style>body{font-family:Arial;max-width:800px;margin:0 auto;padding:40px;line-height:1.8;}</style>';
-    doc = doc + '</head><body>';
-    doc = doc + '<h1>' + p.title + '</h1>';
-    doc = doc + '<p style="color:#999;">' + p.date + '</p><hr>';
-    doc = doc + p.content;
-    doc = doc + '<hr><p><a href="javascript:window.close()">Close</a></p>';
-    doc = doc + '</body></html>';
-    w.document.write(doc);
+    w.document.write('<html><head><title>' + a.title + '</title>');
+    w.document.write('<style>');
+    w.document.write('body{font-family:Arial;max-width:800px;margin:0 auto;padding:40px;background:#fff;line-height:1.8;}');
+    w.document.write('h1{color:#2d3748;}');
+    w.document.write('.date{color:#a0aec0;margin-bottom:20px;}');
+    w.document.write('hr{margin:20px 0;}');
+    w.document.write('pre{background:#f4f4f4;padding:15px;border-radius:8px;overflow-x:auto;}');
+    w.document.write('code{background:#f4f4f4;padding:2px 6px;border-radius:4px;}');
+    w.document.write('</style>');
+    w.document.write('</head><body>');
+    w.document.write('<h1>' + a.title + '</h1>');
+    w.document.write('<div class="date">📅 ' + a.date + '</div><hr>');
+    w.document.write(a.content);
+    w.document.write('<hr><p><a href="javascript:window.close()">关闭窗口</a></p>');
+    w.document.write('</body></html>');
     w.document.close();
 }
 
-// Render posts
-var postsHtml = '';
-for (var i = 0; i < posts.length; i++) {
-    var p = posts[i];
-    var minutes = Math.ceil(p.excerpt.length / 200);
-    if (minutes < 1) minutes = 1;
-    postsHtml = postsHtml + '<div class="post">';
-    postsHtml = postsHtml + '<h2><a href="javascript:viewPost(' + i + ')">' + p.title + '</a></h2>';
-    postsHtml = postsHtml + '<div>' + p.date + ' | ' + minutes + ' min read</div>';
-    postsHtml = postsHtml + '<p>' + p.excerpt + '</p>';
-    postsHtml = postsHtml + '<a class="readmore" href="javascript:viewPost(' + i + ')">Read More →</a>';
-    postsHtml = postsHtml + '</div>';
+window.viewArticle = viewArticle;
+
+// Markdown 转 HTML
+function mdToHtml(md) {
+    if (!md) return '';
+    var h = md;
+    h = h.replace(/&/g, '&amp;');
+    h = h.replace(/</g, '&lt;');
+    h = h.replace(/>/g, '&gt;');
+    h = h.replace(/^# (.*$)/gm, '<h1>$1</h1>');
+    h = h.replace(/^## (.*$)/gm, '<h2>$1</h2>');
+    h = h.replace(/^### (.*$)/gm, '<h3>$1</h3>');
+    h = h.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    h = h.replace(/\*(.*?)\*/g, '<em>$1</em>');
+    h = h.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank">$1</a>');
+    h = h.replace(/!\[(.*?)\]\((.*?)\)/g, '<img src="$2" alt="$1" style="max-width:100%">');
+    h = h.replace(/^- (.*$)/gm, '<li>$1</li>');
+    h = h.replace(/^[0-9]+\. (.*$)/gm, '<li>$1</li>');
+    if (h.indexOf('<li>') !== -1) {
+        h = '<ul>' + h + '</ul>';
+    }
+    h = h.replace(/\n/g, '<br>');
+    return h;
 }
-document.getElementById('posts').innerHTML = postsHtml;
+
+// 获取摘要
+function getExcerpt(md) {
+    if (!md) return '';
+    var text = md.replace(/[#*`\[\]()>]/g, '');
+    if (text.length > 200) {
+        text = text.substring(0, 200) + '...';
+    }
+    return text;
+}
+
+// 加载 md 文件
+function loadMdFile(url, callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+                callback(null, xhr.responseText);
+            } else {
+                callback('error', null);
+            }
+        }
+    };
+    xhr.send();
+}
+
+// 加载所有文章
+function loadAllArticles() {
+    var total = articles.length;
+    var loaded = 0;
+    
+    for (var i = 0; i < articles.length; i++) {
+        var idx = i;
+        var art = articles[idx];
+        
+        loadMdFile(art.file, function(err, md) {
+            if (err) {
+                loadedArticles[idx] = {
+                    title: art.title,
+                    date: art.date,
+                    content: '<p>文章加载失败</p>',
+                    excerpt: '文章加载失败'
+                };
+            } else {
+                loadedArticles[idx] = {
+                    title: art.title,
+                    date: art.date,
+                    content: mdToHtml(md),
+                    excerpt: getExcerpt(md)
+                };
+            }
+            loaded++;
+            
+            if (loaded === total) {
+                renderArticles();
+            }
+        });
+    }
+}
+
+// 渲染文章列表
+function renderArticles() {
+    var listHtml = '';
+    for (var i = 0; i < loadedArticles.length; i++) {
+        var a = loadedArticles[i];
+        var minutes = Math.ceil(a.excerpt.length / 200);
+        if (minutes < 1) minutes = 1;
+        listHtml = listHtml + '<div class="post-card">';
+        listHtml = listHtml + '<h2 class="post-title"><a href="javascript:viewArticle(' + i + ')">' + a.title + '</a></h2>';
+        listHtml = listHtml + '<div class="post-meta">';
+        listHtml = listHtml + '<span>📅 ' + a.date + '</span>';
+        listHtml = listHtml + '<span>📖 约 ' + minutes + ' 分钟</span>';
+        listHtml = listHtml + '</div>';
+        listHtml = listHtml + '<div class="post-excerpt">' + a.excerpt + '</div>';
+        listHtml = listHtml + '<a class="readmore" href="javascript:viewArticle(' + i + ')">阅读全文 →</a>';
+        listHtml = listHtml + '</div>';
+    }
+    document.getElementById('postList').innerHTML = listHtml;
+}
+
+// 开始加载
+loadAllArticles();
 </script>
 
 </body>
