@@ -1,148 +1,291 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
     <title>My Blog</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         body {
-            font-family: Arial;
-            max-width: 1000px;
-            margin: 0 auto;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: #f5f7fa;
             padding: 20px;
         }
-        .left {
-            float: left;
-            width: 250px;
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            gap: 30px;
         }
-        .right {
-            float: left;
-            width: 700px;
+        .sidebar {
+            width: 280px;
+        }
+        .logo-area {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
         }
         .logo {
             width: 120px;
             height: 120px;
-            background: blue;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            text-align: center;
-            line-height: 120px;
-            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            border-radius: 60px;
+            font-size: 24px;
+            font-weight: bold;
         }
         .time {
             font-size: 20px;
-            margin: 10px 0;
+            font-weight: 600;
+            background: #edf2f7;
+            padding: 10px 16px;
+            border-radius: 12px;
+            display: inline-block;
+            font-family: monospace;
         }
-        .btn {
-            display: block;
-            padding: 8px;
-            margin: 5px 0;
-            background: #eee;
-            text-align: center;
-        }
-        .card {
-            background: #eee;
+        .shortcuts-area {
+            background: white;
+            border-radius: 16px;
             padding: 20px;
-            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
-        a {
-            color: blue;
+        .shortcuts-area h3 {
+            font-size: 16px;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        .shortcut {
+            display: block;
+            padding: 10px;
+            background: #f7fafc;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #3182ce;
+            text-align: center;
+            margin-bottom: 8px;
+            border: 1px solid #e2e8f0;
+        }
+        .shortcut:hover {
+            background: #3182ce;
+            color: white;
+        }
+        .main-content {
+            flex: 1;
+        }
+        .header {
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+        .post-card {
+            background: white;
+            border-radius: 20px;
+            padding: 28px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .post-title {
+            font-size: 24px;
+            margin-bottom: 12px;
+        }
+        .post-title a {
+            color: #2d3748;
             text-decoration: none;
         }
-        .clear:after {
-            content: "";
-            clear: both;
-            display: table;
+        .post-title a:hover {
+            color: #3182ce;
+        }
+        .post-meta {
+            color: #a0aec0;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+        .readmore {
+            display: inline-block;
+            margin-top: 12px;
+            color: #3182ce;
+            text-decoration: none;
+        }
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: #a0aec0;
+        }
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
-<div class="clear">
-    <div class="left">
-        <div class="logo">BLOG</div>
-        <div class="time" id="t"></div>
-        <div id="links"></div>
+<div class="container">
+    <div class="sidebar">
+        <div class="logo-area">
+            <div class="logo">BLOG</div>
+            <div class="time" id="time"></div>
+        </div>
+        <div class="shortcuts-area">
+            <h3>Quick Links</h3>
+            <div id="shortcuts"></div>
+        </div>
     </div>
-    <div class="right">
-        <h1>My Blog</h1>
-        <div id="posts"></div>
+    <div class="main-content">
+        <div class="header">
+            <h1>My Blog</h1>
+            <p>Share knowledge and technology</p>
+        </div>
+        <div id="posts"><div class="loading">Loading posts...</div></div>
     </div>
 </div>
+
 <script>
-function clock() {
+function updateTime() {
     var d = new Date();
     var h = d.getHours();
     var m = d.getMinutes();
     var s = d.getSeconds();
-    if (h < 10) h = '0' + h;
-    if (m < 10) m = '0' + m;
-    if (s < 10) s = '0' + s;
-    document.getElementById('t').innerHTML = h + ':' + m + ':' + s;
+    h = h < 10 ? '0' + h : h;
+    m = m < 10 ? '0' + m : m;
+    s = s < 10 ? '0' + s : s;
+    document.getElementById('time').innerHTML = h + ':' + m + ':' + s;
 }
-clock();
-setInterval(clock, 1000);
+updateTime();
+setInterval(updateTime, 1000);
 
-var names = ['Github','Google','StackOverflow','Juejin','Zhihu','RuanYifeng','Vue','React','Tailwind','MDN'];
-var urls = [
-    'https://github.com',
-    'https://google.com',
-    'https://stackoverflow.com',
-    'https://juejin.cn',
-    'https://zhihu.com',
-    'https://ruanyifeng.com',
-    'https://vuejs.org',
-    'https://reactjs.org',
-    'https://tailwindcss.com',
-    'https://developer.mozilla.org'
+var links = [
+    ['GitHub', 'https://github.com'],
+    ['Google', 'https://google.com'],
+    ['Stack Overflow', 'https://stackoverflow.com'],
+    ['Juejin', 'https://juejin.cn'],
+    ['Zhihu', 'https://zhihu.com'],
+    ['Ruan Yifeng', 'https://ruanyifeng.com'],
+    ['Vue.js', 'https://vuejs.org'],
+    ['React', 'https://reactjs.org'],
+    ['Tailwind', 'https://tailwindcss.com'],
+    ['MDN', 'https://developer.mozilla.org']
 ];
 
-var linkHtml = '';
-for (var i = 0; i < names.length; i++) {
-    linkHtml = linkHtml + '<a class="btn" href="' + urls[i] + '" target="_blank">' + names[i] + '</a>';
+var shortcutHtml = '';
+for (var i = 0; i < links.length; i++) {
+    shortcutHtml += '<a class="shortcut" href="' + links[i][1] + '" target="_blank">' + links[i][0] + '</a>';
 }
-document.getElementById('links').innerHTML = linkHtml;
+document.getElementById('shortcuts').innerHTML = shortcutHtml;
 
-var articles = [
-    {title: 'Welcome', date: '2026-04-26', file: 'posts/welcome.md'},
-    {title: 'EdgeOne Pages', date: '2026-04-25', file: 'posts/edgeone-tutorial.md'},
-    {title: 'Markdown', date: '2026-04-24', file: 'posts/markdown-guide.md'}
+var posts = [
+    {title: 'Welcome to My Blog', date: '2026-04-26', file: 'posts/welcome.md'},
+    {title: 'EdgeOne Pages Tutorial', date: '2026-04-25', file: 'posts/edgeone-tutorial.md'},
+    {title: 'Markdown Guide', date: '2026-04-24', file: 'posts/markdown-guide.md'}
 ];
 
-function openPost(title, date, content) {
+var loadedPosts = [];
+
+function mdToHtml(md) {
+    if (!md) return '';
+    var h = md;
+    h = h.replace(/^# (.*$)/gm, '<h1>$1</h1>');
+    h = h.replace(/^## (.*$)/gm, '<h2>$1</h2>');
+    h = h.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    h = h.replace(/\*(.*?)\*/g, '<em>$1</em>');
+    h = h.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank">$1</a>');
+    h = h.replace(/^- (.*$)/gm, '<li>$1</li>');
+    h = h.replace(/\n/g, '<br>');
+    if (h.indexOf('<li>') !== -1) {
+        h = '<ul>' + h + '</ul>';
+    }
+    return h;
+}
+
+function getExcerpt(md) {
+    if (!md) return '';
+    var text = md.substring(0, 200);
+    if (text.length >= 200) text += '...';
+    return text;
+}
+
+function viewPost(index) {
+    var p = loadedPosts[index];
+    if (!p) return;
     var w = window.open();
-    w.document.write('<html><head><title>' + title + '</title></head><body>');
-    w.document.write('<h1>' + title + '</h1>');
-    w.document.write('<p>' + date + '</p>');
-    w.document.write(content);
-    w.document.write('<p><a href="javascript:window.close()">Close</a></p>');
+    w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>' + p.title + '</title>');
+    w.document.write('<style>body{font-family:Arial;max-width:800px;margin:0 auto;padding:40px;}</style>');
+    w.document.write('</head><body>');
+    w.document.write('<h1>' + p.title + '</h1>');
+    w.document.write('<p style="color:#999;">' + p.date + '</p><hr>');
+    w.document.write(p.html);
+    w.document.write('<hr><p><a href="javascript:window.close()">Close</a></p>');
     w.document.write('</body></html>');
     w.document.close();
 }
 
-function loadPost(idx) {
-    var a = articles[idx];
-    var x = new XMLHttpRequest();
-    x.open('GET', a.file, true);
-    x.onload = function() {
-        if (x.status == 200) {
-            var c = x.responseText;
-            c = c.replace(/^# /gm, '<h1>');
-            c = c.replace(/^## /gm, '<h2>');
-            c = c.replace(/\n/g, '<br>');
-            openPost(a.title, a.date, c);
-        } else {
-            openPost(a.title, a.date, '<p>Error loading</p>');
-        }
-    };
-    x.send();
+window.viewPost = viewPost;
+
+function loadPosts() {
+    var total = posts.length;
+    var loaded = 0;
+    
+    for (var i = 0; i < posts.length; i++) {
+        var idx = i;
+        var p = posts[idx];
+        
+        fetch(p.file)
+            .then(function(res) { return res.text(); })
+            .then(function(md) {
+                loadedPosts[idx] = {
+                    title: p.title,
+                    date: p.date,
+                    html: mdToHtml(md),
+                    excerpt: getExcerpt(md)
+                };
+                loaded++;
+                if (loaded === total) renderPosts();
+            })
+            .catch(function() {
+                loadedPosts[idx] = {
+                    title: p.title,
+                    date: p.date,
+                    html: '<p>Failed to load</p>',
+                    excerpt: 'Failed to load'
+                };
+                loaded++;
+                if (loaded === total) renderPosts();
+            });
+    }
 }
 
-var postsHtml = '';
-for (var i = 0; i < articles.length; i++) {
-    var a = articles[i];
-    postsHtml = postsHtml + '<div class="card">';
-    postsHtml = postsHtml + '<h2><a href="javascript:loadPost(' + i + ')">' + a.title + '</a></h2>';
-    postsHtml = postsHtml + '<p>' + a.date + '</p>';
-    postsHtml = postsHtml + '</div>';
+function renderPosts() {
+    var html = '';
+    for (var i = 0; i < loadedPosts.length; i++) {
+        var p = loadedPosts[i];
+        var minutes = Math.ceil(p.excerpt.length / 200);
+        if (minutes < 1) minutes = 1;
+        html += '<div class="post-card">';
+        html += '<h2 class="post-title"><a href="javascript:viewPost(' + i + ')">' + p.title + '</a></h2>';
+        html += '<div class="post-meta">' + p.date + ' | ' + minutes + ' min read</div>';
+        html += '<p>' + p.excerpt + '</p>';
+        html += '<a class="readmore" href="javascript:viewPost(' + i + ')">Read More →</a>';
+        html += '</div>';
+    }
+    document.getElementById('posts').innerHTML = html;
 }
-document.getElementById('posts').innerHTML = postsHtml;
+
+loadPosts();
 </script>
 </body>
 </html>
