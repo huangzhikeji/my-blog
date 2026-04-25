@@ -18,7 +18,6 @@
             line-height: 1.6;
         }
 
-        /* 整体布局容器 */
         .container {
             max-width: 1400px;
             margin: 0 auto;
@@ -27,7 +26,6 @@
             gap: 30px;
         }
 
-        /* 侧边栏样式 */
         .sidebar {
             width: 280px;
             flex-shrink: 0;
@@ -36,7 +34,6 @@
             height: fit-content;
         }
 
-        /* LOGO区域 */
         .logo-area {
             background: white;
             border-radius: 16px;
@@ -53,6 +50,7 @@
             object-fit: cover;
             margin-bottom: 15px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            background: #e2e8f0;
         }
 
         .beijing-time {
@@ -66,7 +64,6 @@
             display: inline-block;
         }
 
-        /* 快捷按钮区域 */
         .shortcuts {
             background: white;
             border-radius: 16px;
@@ -108,7 +105,6 @@
             border-color: #3182ce;
         }
 
-        /* 主内容区 */
         .main-content {
             flex: 1;
             min-width: 0;
@@ -127,7 +123,6 @@
             color: #718096;
         }
 
-        /* 文章列表 */
         .posts-list {
             display: flex;
             flex-direction: column;
@@ -186,14 +181,12 @@
             text-decoration: underline;
         }
 
-        /* 加载状态 */
         .loading {
             text-align: center;
             padding: 60px;
             color: #a0aec0;
         }
 
-        /* 响应式 */
         @media (max-width: 768px) {
             .container {
                 flex-direction: column;
@@ -212,27 +205,21 @@
             }
         }
     </style>
-    <!-- 引入 marked.js 用于解析 Markdown -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
     <div class="container">
-        <!-- 侧边栏 -->
         <aside class="sidebar">
             <div class="logo-area">
-                <!-- 请替换 images/logo.png 为你的图片路径，尺寸建议120x120 -->
-                <img src="images/logo.png" alt="Logo" class="logo" onerror="this.src='https://via.placeholder.com/120x120?text=LOGO'">
+                <!-- 使用 base64 图片作为默认 logo，避免 404 错误 -->
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Crect width='120' height='120' fill='%234A5568'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='white' font-size='16' font-family='Arial'%3EBLOG%3C/text%3E%3C/svg%3E" alt="Logo" class="logo" id="logo">
                 <div class="beijing-time" id="beijingTime">--:--:--</div>
             </div>
             <div class="shortcuts">
                 <h3>快捷链接</h3>
-                <div class="shortcut-buttons" id="shortcutsList">
-                    <!-- 快捷按钮将通过JS动态生成 -->
-                </div>
+                <div class="shortcut-buttons" id="shortcutsList"></div>
             </div>
         </aside>
 
-        <!-- 主内容区 -->
         <main class="main-content">
             <div class="blog-header">
                 <h1>📝 我的博客</h1>
@@ -245,67 +232,107 @@
     </div>
 
     <script>
-        // ==================== 配置区域 ====================
-        // 1. 配置快捷按钮：每项包含 name(显示文字) 和 url(跳转链接)
+        // 简单的 Markdown 解析器（避免使用外部 CDN）
+        function simpleMarkdownParser(markdown) {
+            if (!markdown) return '';
+            
+            let html = markdown;
+            
+            // 转义 HTML 特殊字符
+            html = html.replace(/&/g, '&amp;')
+                       .replace(/</g, '&lt;')
+                       .replace(/>/g, '&gt;');
+            
+            // 标题 h1-h6
+            html = html.replace(/^# (.*$)/gm, '<h1>$1</h1>');
+            html = html.replace(/^## (.*$)/gm, '<h2>$1</h2>');
+            html = html.replace(/^### (.*$)/gm, '<h3>$1</h3>');
+            html = html.replace(/^#### (.*$)/gm, '<h4>$1</h4>');
+            
+            // 粗体和斜体
+            html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+            
+            // 代码块
+            html = html.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
+            html = html.replace(/`(.*?)`/g, '<code>$1</code>');
+            
+            // 链接
+            html = html.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank">$1</a>');
+            
+            // 图片
+            html = html.replace(/!\[(.*?)\]\((.*?)\)/g, '<img src="$2" alt="$1" style="max-width:100%">');
+            
+            // 无序列表
+            html = html.replace(/^\- (.*$)/gm, '<li>$1</li>');
+            html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+            
+            // 段落
+            html = html.replace(/^(?!<[a-z])(.*$)/gm, '<p>$1</p>');
+            
+            // 换行
+            html = html.replace(/\n/g, '<br>');
+            
+            return html;
+        }
+
+        // 配置快捷按钮
         const SHORTCUTS = [
             { name: "GitHub", url: "https://github.com" },
-            { name: "Twitter", url: "https://twitter.com" },
+            { name: "Google", url: "https://www.google.com" },
+            { name: "Stack Overflow", url: "https://stackoverflow.com" },
             { name: "掘金", url: "https://juejin.cn" },
             { name: "知乎", url: "https://zhihu.com" },
-            { name: "RSS订阅", url: "#" },
-            { name: "关于我", url="#" },
-            { name: "友情链接1", url="#" },
-            { name: "友情链接2", url="#" },
-            { name: "友情链接3", url="#" },
-            { name: "友情链接4", url="#" }
+            { name: "阮一峰", url: "https://www.ruanyifeng.com/blog/" },
+            { name: "Vue.js", url: "https://vuejs.org" },
+            { name: "React", url: "https://reactjs.org" },
+            { name: "Tailwind CSS", url: "https://tailwindcss.com" },
+            { name: "MDN", url: "https://developer.mozilla.org" }
         ];
 
-        // 2. 配置文章列表（按此顺序显示）
-        // 每篇文章包含：title(标题), date(日期), excerpt(摘要), file(对应的md文件路径)
+        // 配置文章列表
         const POSTS_CONFIG = [
             {
                 title: "欢迎来到我的博客",
-                date: "2026-01-15",
+                date: "2026-04-26",
                 excerpt: "这是我的第一篇博客文章，主要介绍博客的用途和未来计划...",
                 file: "posts/welcome.md"
             },
             {
                 title: "EdgeOne Pages 部署教程",
-                date: "2026-01-10",
+                date: "2026-04-25",
                 excerpt: "详细介绍如何使用腾讯云 EdgeOne Pages 快速部署静态网站...",
                 file: "posts/edgeone-tutorial.md"
             },
             {
                 title: "Markdown 写作指南",
-                date: "2026-01-05",
+                date: "2026-04-24",
                 excerpt: "高效使用 Markdown 进行技术写作，让你的文章更专业...",
                 file: "posts/markdown-guide.md"
             }
         ];
 
-        // ==================== 北京时间显示 ====================
+        // 北京时间显示
         function updateBeijingTime() {
             const now = new Date();
-            // 格式化为北京时间 (UTC+8)
-            const beijingTime = now.toLocaleString('zh-CN', {
-                timeZone: 'Asia/Shanghai',
-                hour12: false,
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit'
-            });
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            
+            const beijingTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
             const timeElement = document.getElementById('beijingTime');
             if (timeElement) {
                 timeElement.textContent = beijingTime;
             }
         }
+        
         updateBeijingTime();
         setInterval(updateBeijingTime, 1000);
 
-        // ==================== 渲染快捷按钮 ====================
+        // 渲染快捷按钮
         function renderShortcuts() {
             const container = document.getElementById('shortcutsList');
             if (!container) return;
@@ -317,83 +344,79 @@
             `).join('');
         }
 
-        // ==================== 文章渲染 ====================
-        // 由于 GitHub Pages / EdgeOne Pages 无法直接解析 md 文件内容，
-        // 这里采用两种策略：
-        // 方案A：如果 md 文件可访问，则实时 fetch 并解析
-        // 方案B：如果 md 文件无法跨域访问，可预先在 POSTS_CONFIG 中写好完整 HTML 内容
-        // 以下实现方案A（推荐，将 md 文件放置在 posts 目录下）
-        
+        // 防XSS函数
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        // 加载并渲染文章
         async function loadAndRenderPosts() {
             const container = document.getElementById('postsContainer');
             if (!container) return;
             
             container.innerHTML = '<div class="loading">加载文章中...</div>';
             
-            // 并行加载所有文章
             const postsWithContent = await Promise.all(
                 POSTS_CONFIG.map(async (post) => {
                     try {
                         const response = await fetch(post.file);
                         if (response.ok) {
                             const markdown = await response.text();
-                            // 使用 marked 解析 markdown 为 HTML
-                            // 提取前几段作为摘要显示，或者直接显示完整内容
-                            const htmlContent = marked.parse(markdown);
-                            // 创建临时div来提取纯文本摘要
-                            const tempDiv = document.createElement('div');
-                            tempDiv.innerHTML = htmlContent;
-                            const plainText = tempDiv.textContent || tempDiv.innerText || '';
-                            const excerpt = plainText.substring(0, 200) + (plainText.length > 200 ? '...' : '');
+                            const htmlContent = simpleMarkdownParser(markdown);
+                            const plainText = markdown.replace(/[#*`\[\]()]/g, '').substring(0, 200);
+                            const excerpt = plainText + (plainText.length >= 200 ? '...' : '');
                             return {
                                 ...post,
                                 fullHtml: htmlContent,
-                                excerpt: excerpt
+                                excerpt: excerpt || post.excerpt
                             };
                         } else {
                             return {
                                 ...post,
-                                excerpt: post.excerpt || '文章加载失败，请检查文件路径。',
-                                fullHtml: `<p>${post.excerpt || '暂无内容'}</p>`
+                                excerpt: post.excerpt,
+                                fullHtml: `<p>${post.excerpt}</p>`
                             };
                         }
                     } catch (error) {
                         console.error(`加载文章 ${post.file} 失败:`, error);
                         return {
                             ...post,
-                            excerpt: post.excerpt || '文章加载出错。',
-                            fullHtml: `<p>${post.excerpt || '加载出错'}</p>`
+                            excerpt: post.excerpt,
+                            fullHtml: `<p>${post.excerpt}</p>`
                         };
                     }
                 })
             );
             
-            // 渲染文章列表（显示摘要）
             container.innerHTML = postsWithContent.map(post => `
                 <article class="post-card">
                     <h2 class="post-title">
-                        <a href="#" onclick="viewPost(${JSON.stringify(post).replace(/"/g, '&quot;')}); return false;">
+                        <a href="javascript:void(0)" onclick='viewPost(${JSON.stringify(post).replace(/'/g, "\\'")})'>
                             ${escapeHtml(post.title)}
                         </a>
                     </h2>
                     <div class="post-meta">
                         <span>📅 ${post.date}</span>
-                        <span>📖 约 ${Math.ceil(post.excerpt.length / 200)} 分钟</span>
+                        <span>📖 约 ${Math.ceil(post.excerpt.length / 200) || 1} 分钟</span>
                     </div>
                     <div class="post-excerpt">
                         <p>${escapeHtml(post.excerpt)}</p>
                     </div>
-                    <a href="#" class="read-more" onclick="viewPost(${JSON.stringify(post).replace(/"/g, '&quot;')}); return false;">
+                    <a href="javascript:void(0)" class="read-more" onclick='viewPost(${JSON.stringify(post).replace(/'/g, "\\'")})'>
                         阅读全文 →
                     </a>
                 </article>
             `).join('');
         }
         
-        // 查看文章详情（使用模态框或跳转新页面）
-        // 将文章详情函数挂载到 window 以便 onclick 调用
+        // 查看文章详情
         window.viewPost = function(post) {
-            // 在新窗口中显示完整文章
             const win = window.open();
             win.document.write(`
                 <!DOCTYPE html>
@@ -403,6 +426,11 @@
                     <title>${escapeHtml(post.title)}</title>
                     <meta name="viewport" content="width=device-width, initial-scale=1.0">
                     <style>
+                        * {
+                            margin: 0;
+                            padding: 0;
+                            box-sizing: border-box;
+                        }
                         body {
                             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
                             max-width: 800px;
@@ -419,6 +447,7 @@
                         .post-title {
                             font-size: 2rem;
                             margin-bottom: 10px;
+                            color: #2d3748;
                         }
                         .post-date {
                             color: #718096;
@@ -429,28 +458,42 @@
                             border-radius: 16px;
                             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
                         }
+                        .post-content h1, .post-content h2, .post-content h3 {
+                            margin: 20px 0 10px 0;
+                        }
+                        .post-content p {
+                            margin: 10px 0;
+                        }
                         .post-content img {
                             max-width: 100%;
                             height: auto;
                         }
-                        pre {
+                        .post-content pre {
                             background: #2d3748;
                             color: #fbbf24;
                             padding: 16px;
                             border-radius: 8px;
                             overflow-x: auto;
+                            margin: 15px 0;
                         }
-                        code {
+                        .post-content code {
                             background: #edf2f7;
                             padding: 2px 6px;
                             border-radius: 4px;
                             font-family: monospace;
+                        }
+                        .post-content ul, .post-content ol {
+                            margin: 10px 0 10px 30px;
                         }
                         .back-link {
                             display: inline-block;
                             margin-top: 30px;
                             color: #3182ce;
                             text-decoration: none;
+                            cursor: pointer;
+                        }
+                        .back-link:hover {
+                            text-decoration: underline;
                         }
                     </style>
                 </head>
@@ -469,20 +512,28 @@
             win.document.close();
         };
         
-        // 简单的防XSS函数
-        function escapeHtml(str) {
-            if (!str) return '';
-            return str
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;')
-                .replace(/'/g, '&#39;');
+        // 替换 logo（如果有自定义图片）
+        function loadCustomLogo() {
+            const logoImg = document.getElementById('logo');
+            if (logoImg) {
+                // 如果存在 images/logo.png 则使用，否则保持默认 SVG
+                fetch('images/logo.png')
+                    .then(response => {
+                        if (response.ok) {
+                            logoImg.src = 'images/logo.png';
+                        }
+                    })
+                    .catch(() => {
+                        // 保持默认 SVG 图片，不做任何操作
+                        console.log('使用默认 Logo');
+                    });
+            }
         }
         
-        // ==================== 初始化 ====================
+        // 初始化
         renderShortcuts();
         loadAndRenderPosts();
+        loadCustomLogo();
     </script>
 </body>
 </html>
