@@ -25,7 +25,6 @@
             gap: 30px;
         }
         
-        /* 侧边栏 */
         .sidebar {
             width: 300px;
             flex-shrink: 0;
@@ -34,7 +33,6 @@
             height: fit-content;
         }
         
-        /* LOGO区域 */
         .logo-area {
             background: white;
             border-radius: 16px;
@@ -70,7 +68,6 @@
             font-family: monospace;
         }
         
-        /* 快捷按钮区域 */
         .shortcuts-area {
             background: white;
             border-radius: 16px;
@@ -112,7 +109,6 @@
             border-color: #3182ce;
         }
         
-        /* 主内容区 */
         .main-content {
             flex: 1;
             min-width: 0;
@@ -135,7 +131,6 @@
             font-size: 16px;
         }
         
-        /* 文章列表 */
         .posts-list {
             display: flex;
             flex-direction: column;
@@ -200,7 +195,6 @@
             color: #a0aec0;
         }
         
-        /* 响应式 */
         @media (max-width: 768px) {
             .container {
                 flex-direction: column;
@@ -223,7 +217,6 @@
 <body>
 
 <div class="container">
-    <!-- 侧边栏 -->
     <aside class="sidebar">
         <div class="logo-area">
             <div class="logo">BLOG</div>
@@ -235,7 +228,6 @@
         </div>
     </aside>
 
-    <!-- 主内容 -->
     <main class="main-content">
         <div class="blog-header">
             <h1>我的博客</h1>
@@ -248,7 +240,7 @@
 </div>
 
 <script>
-// 更新时间
+// 更新北京时间
 function updateTime() {
     var now = new Date();
     var hours = now.getHours();
@@ -263,7 +255,7 @@ updateTime();
 setInterval(updateTime, 1000);
 
 // 快捷按钮
-var linkNames = ['GitHub', 'Google', 'Stack Overflow', '掘金', '知乎', '阮一峰', 'Vue', 'React', 'Tailwind', 'MDN'];
+var linkNames = ['GitHub', 'Google', 'Stack Overflow', 'Juejin', 'Zhihu', 'Ruan Yifeng', 'Vue', 'React', 'Tailwind', 'MDN'];
 var linkUrls = [
     'https://github.com',
     'https://google.com',
@@ -279,15 +271,15 @@ var linkUrls = [
 
 var shortcutHtml = '';
 for (var i = 0; i < linkNames.length; i++) {
-    shortcutHtml = shortcutHtml + '<a class="shortcut" href="' + linkUrls[i] + '" target="_blank">' + linkNames[i] + '</a>';
+    shortcutHtml = shortcutHtml + '<a class="shortcut" href="' + linkUrls[i] + '" target="_blank" rel="noopener noreferrer">' + linkNames[i] + '</a>';
 }
 document.getElementById('shortcutList').innerHTML = shortcutHtml;
 
-// 文章配置
+// 文章配置 - 使用相对路径
 var articles = [
-    {title: '欢迎来到我的博客', date: '2026-04-26', file: 'posts/welcome.md'},
-    {title: 'EdgeOne Pages 部署教程', date: '2026-04-25', file: 'posts/edgeone-tutorial.md'},
-    {title: 'Markdown 写作指南', date: '2026-04-24', file: 'posts/markdown-guide.md'}
+    {title: 'Welcome to My Blog', date: '2026-04-26', file: './posts/welcome.md'},
+    {title: 'EdgeOne Pages Tutorial', date: '2026-04-25', file: './posts/edgeone-tutorial.md'},
+    {title: 'Markdown Guide', date: '2026-04-24', file: './posts/markdown-guide.md'}
 ];
 
 var loadedArticles = [];
@@ -297,20 +289,21 @@ function viewArticle(index) {
     var a = loadedArticles[index];
     if (!a) return;
     var w = window.open();
-    w.document.write('<html><head><title>' + a.title + '</title>');
+    w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>' + a.title + '</title>');
     w.document.write('<style>');
-    w.document.write('body{font-family:Arial;max-width:800px;margin:0 auto;padding:40px;background:#fff;line-height:1.8;}');
+    w.document.write('body{font-family:Arial,sans-serif;max-width:800px;margin:0 auto;padding:40px;background:#fff;line-height:1.8;}');
     w.document.write('h1{color:#2d3748;}');
     w.document.write('.date{color:#a0aec0;margin-bottom:20px;}');
     w.document.write('hr{margin:20px 0;}');
     w.document.write('pre{background:#f4f4f4;padding:15px;border-radius:8px;overflow-x:auto;}');
     w.document.write('code{background:#f4f4f4;padding:2px 6px;border-radius:4px;}');
+    w.document.write('img{max-width:100%;}');
     w.document.write('</style>');
     w.document.write('</head><body>');
     w.document.write('<h1>' + a.title + '</h1>');
-    w.document.write('<div class="date">📅 ' + a.date + '</div><hr>');
+    w.document.write('<div class="date">Date: ' + a.date + '</div><hr>');
     w.document.write(a.content);
-    w.document.write('<hr><p><a href="javascript:window.close()">关闭窗口</a></p>');
+    w.document.write('<hr><p><a href="javascript:window.close()">Close Window</a></p>');
     w.document.write('</body></html>');
     w.document.close();
 }
@@ -321,9 +314,6 @@ window.viewArticle = viewArticle;
 function mdToHtml(md) {
     if (!md) return '';
     var h = md;
-    h = h.replace(/&/g, '&amp;');
-    h = h.replace(/</g, '&lt;');
-    h = h.replace(/>/g, '&gt;');
     h = h.replace(/^# (.*$)/gm, '<h1>$1</h1>');
     h = h.replace(/^## (.*$)/gm, '<h2>$1</h2>');
     h = h.replace(/^### (.*$)/gm, '<h3>$1</h3>');
@@ -334,7 +324,7 @@ function mdToHtml(md) {
     h = h.replace(/^- (.*$)/gm, '<li>$1</li>');
     h = h.replace(/^[0-9]+\. (.*$)/gm, '<li>$1</li>');
     if (h.indexOf('<li>') !== -1) {
-        h = '<ul>' + h + '</ul>';
+        h = h.replace(/(<li>.*<\/li>)/, '<ul>$1</ul>');
     }
     h = h.replace(/\n/g, '<br>');
     return h;
@@ -350,20 +340,21 @@ function getExcerpt(md) {
     return text;
 }
 
-// 加载 md 文件
+// 使用 fetch 加载 md 文件 (EdgeOne Pages 支持)
 function loadMdFile(url, callback) {
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', url, true);
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState === 4) {
-            if (xhr.status === 200) {
-                callback(null, xhr.responseText);
-            } else {
-                callback('error', null);
+    fetch(url)
+        .then(function(response) {
+            if (!response.ok) {
+                throw new Error('HTTP error ' + response.status);
             }
-        }
-    };
-    xhr.send();
+            return response.text();
+        })
+        .then(function(text) {
+            callback(null, text);
+        })
+        .catch(function(error) {
+            callback('error: ' + error.message, null);
+        });
 }
 
 // 加载所有文章
@@ -380,8 +371,8 @@ function loadAllArticles() {
                 loadedArticles[idx] = {
                     title: art.title,
                     date: art.date,
-                    content: '<p>文章加载失败</p>',
-                    excerpt: '文章加载失败'
+                    content: '<p>Failed to load post: ' + err + '</p>',
+                    excerpt: 'Failed to load post'
                 };
             } else {
                 loadedArticles[idx] = {
@@ -410,11 +401,11 @@ function renderArticles() {
         listHtml = listHtml + '<div class="post-card">';
         listHtml = listHtml + '<h2 class="post-title"><a href="javascript:viewArticle(' + i + ')">' + a.title + '</a></h2>';
         listHtml = listHtml + '<div class="post-meta">';
-        listHtml = listHtml + '<span>📅 ' + a.date + '</span>';
-        listHtml = listHtml + '<span>📖 约 ' + minutes + ' 分钟</span>';
+        listHtml = listHtml + '<span>Date: ' + a.date + '</span>';
+        listHtml = listHtml + '<span>Read: ' + minutes + ' min</span>';
         listHtml = listHtml + '</div>';
         listHtml = listHtml + '<div class="post-excerpt">' + a.excerpt + '</div>';
-        listHtml = listHtml + '<a class="readmore" href="javascript:viewArticle(' + i + ')">阅读全文 →</a>';
+        listHtml = listHtml + '<a class="readmore" href="javascript:viewArticle(' + i + ')">Read More →</a>';
         listHtml = listHtml + '</div>';
     }
     document.getElementById('postList').innerHTML = listHtml;
