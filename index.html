@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>我的博客</title>
+    <title>My Blog</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -22,6 +22,7 @@
         }
         .time {
             margin: 10px 0;
+            font-size: 18px;
         }
         .shortcut {
             display: inline-block;
@@ -30,6 +31,7 @@
             background: #eee;
             text-decoration: none;
             color: black;
+            border-radius: 5px;
         }
         .post {
             border-bottom: 1px solid #ccc;
@@ -63,10 +65,10 @@
     <div id="shortcuts"></div>
 </div>
 
-<div id="posts"><div class="loading">加载文章中...</div></div>
+<div id="posts"><div class="loading">Loading posts...</div></div>
 
 <script>
-// 显示时间
+// show time
 function showTime() {
     var d = new Date();
     var h = d.getHours();
@@ -80,10 +82,10 @@ function showTime() {
 showTime();
 setInterval(showTime, 1000);
 
-// 快捷按钮
+// shortcuts
 var sites = [
-    'GitHub', 'Google', 'Stack Overflow', '掘金', '知乎',
-    '阮一峰', 'Vue.js', 'React', 'Tailwind', 'MDN'
+    'GitHub', 'Google', 'StackOverflow', 'Juejin', 'Zhihu',
+    'RuanYifeng', 'Vue', 'React', 'Tailwind', 'MDN'
 ];
 var urls = [
     'https://github.com', 'https://google.com', 'https://stackoverflow.com', 'https://juejin.cn', 'https://zhihu.com',
@@ -96,16 +98,16 @@ for (var i = 0; i < sites.length; i++) {
 }
 document.getElementById('shortcuts').innerHTML = html;
 
-// 文章配置（文件路径）
+// posts config
 var postsConfig = [
-    {title: '欢迎来到我的博客', date: '2026-04-26', file: 'posts/welcome.md'},
-    {title: 'EdgeOne Pages 部署', date: '2026-04-25', file: 'posts/edgeone-tutorial.md'},
-    {title: 'Markdown 指南', date: '2026-04-24', file: 'posts/markdown-guide.md'}
+    {title: 'Welcome to My Blog', date: '2026-04-26', file: 'posts/welcome.md'},
+    {title: 'EdgeOne Pages Tutorial', date: '2026-04-25', file: 'posts/edgeone-tutorial.md'},
+    {title: 'Markdown Guide', date: '2026-04-24', file: 'posts/markdown-guide.md'}
 ];
 
 var loadedPosts = [];
 
-// 简单的md转html
+// markdown to html
 function mdToHtml(md) {
     if (!md) return '';
     var h = md;
@@ -117,19 +119,24 @@ function mdToHtml(md) {
     h = h.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank">$1</a>');
     h = h.replace(/^- (.*$)/gm, '<li>$1</li>');
     h = h.replace(/^[0-9]+\. (.*$)/gm, '<li>$1</li>');
+    if (h.indexOf('<li>') !== -1) {
+        h = '<ul>' + h + '</ul>';
+    }
     h = h.replace(/\n/g, '<br>');
     return h;
 }
 
-// 获取摘要
+// get excerpt
 function getExcerpt(md) {
     if (!md) return '';
-    var text = md.replace(/[#*]/g, '').substring(0, 150);
-    if (text.length >= 150) text = text + '...';
+    var text = md.replace(/[#*]/g, '');
+    if (text.length > 150) {
+        text = text.substring(0, 150) + '...';
+    }
     return text;
 }
 
-// 显示文章
+// show post
 function showPost(index) {
     var post = loadedPosts[index];
     if (!post) return;
@@ -141,7 +148,7 @@ function showPost(index) {
     page = page + '<p style="color:#999;">' + post.date + '</p>';
     page = page + '<hr>';
     page = page + post.html;
-    page = page + '<hr><p><a href="javascript:window.close()">关闭窗口</a></p>';
+    page = page + '<hr><p><a href="javascript:window.close()">Close Window</a></p>';
     page = page + '</body></html>';
     win.document.write(page);
     win.document.close();
@@ -149,31 +156,31 @@ function showPost(index) {
 
 window.showPost = showPost;
 
-// 加载文章
+// load posts
 function loadPosts() {
     var promises = [];
     
     for (var i = 0; i < postsConfig.length; i++) {
-        var config = postsConfig[i];
-        var promise = fetch(config.file)
+        var cfg = postsConfig[i];
+        var promise = fetch(cfg.file)
             .then(function(response) {
-                if (!response.ok) throw new Error('load failed');
+                if (!response.ok) throw new Error('fail');
                 return response.text();
             })
             .then(function(md) {
                 return {
-                    title: config.title,
-                    date: config.date,
+                    title: cfg.title,
+                    date: cfg.date,
                     html: mdToHtml(md),
                     excerpt: getExcerpt(md)
                 };
             })
             .catch(function() {
                 return {
-                    title: config.title,
-                    date: config.date,
-                    html: '<p>文章加载失败</p>',
-                    excerpt: '文章加载失败'
+                    title: cfg.title,
+                    date: cfg.date,
+                    html: '<p>Failed to load post</p>',
+                    excerpt: 'Failed to load post'
                 };
             });
         promises.push(promise);
@@ -188,16 +195,15 @@ function loadPosts() {
             postsHtml = postsHtml + '<h2><a href="javascript:showPost(' + i + ')">' + p.title + '</a></h2>';
             postsHtml = postsHtml + '<div>' + p.date + '</div>';
             postsHtml = postsHtml + '<p>' + p.excerpt + '</p>';
-            postsHtml = postsHtml + '<a class="readmore" href="javascript:showPost(' + i + ')">阅读全文 →</a>';
+            postsHtml = postsHtml + '<a class="readmore" href="javascript:showPost(' + i + ')">Read More →</a>';
             postsHtml = postsHtml + '</div>';
         }
         document.getElementById('posts').innerHTML = postsHtml;
     }).catch(function(err) {
-        document.getElementById('posts').innerHTML = '<div class="loading">加载失败，请刷新</div>';
+        document.getElementById('posts').innerHTML = '<div class="loading">Load failed, please refresh</div>';
     });
 }
 
-// 开始加载
 loadPosts();
 </script>
 
