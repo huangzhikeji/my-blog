@@ -10,14 +10,12 @@
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
             background: #f5f7fa;
             color: #1a202c;
             line-height: 1.6;
         }
-
         .container {
             max-width: 1400px;
             margin: 0 auto;
@@ -25,7 +23,6 @@
             display: flex;
             gap: 30px;
         }
-
         .sidebar {
             width: 280px;
             flex-shrink: 0;
@@ -33,7 +30,6 @@
             top: 20px;
             height: fit-content;
         }
-
         .logo-area {
             background: white;
             border-radius: 16px;
@@ -42,35 +38,29 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
             margin-bottom: 20px;
         }
-
         .logo {
             width: 120px;
             height: 120px;
             border-radius: 50%;
             object-fit: cover;
             margin-bottom: 15px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             background: #e2e8f0;
         }
-
         .beijing-time {
             font-size: 1.2rem;
             font-weight: 600;
             color: #2d3748;
-            font-family: 'Monaco', 'Menlo', monospace;
             background: #edf2f7;
             padding: 8px 12px;
             border-radius: 12px;
             display: inline-block;
         }
-
         .shortcuts {
             background: white;
             border-radius: 16px;
             padding: 20px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
-
         .shortcuts h3 {
             font-size: 1rem;
             color: #4a5568;
@@ -78,13 +68,11 @@
             padding-bottom: 8px;
             border-bottom: 2px solid #e2e8f0;
         }
-
         .shortcut-buttons {
             display: flex;
             flex-direction: column;
             gap: 10px;
         }
-
         .shortcut-btn {
             display: block;
             padding: 10px 16px;
@@ -93,70 +81,51 @@
             text-decoration: none;
             color: #3182ce;
             font-weight: 500;
-            transition: all 0.2s ease;
             border: 1px solid #e2e8f0;
             text-align: center;
         }
-
         .shortcut-btn:hover {
             background: #3182ce;
             color: white;
-            transform: translateX(4px);
-            border-color: #3182ce;
         }
-
         .main-content {
             flex: 1;
             min-width: 0;
         }
-
         .blog-header {
             margin-bottom: 30px;
         }
-
         .blog-header h1 {
             font-size: 2rem;
             color: #2d3748;
         }
-
-        .blog-header p {
-            color: #718096;
-        }
-
         .posts-list {
             display: flex;
             flex-direction: column;
             gap: 24px;
         }
-
         .post-card {
             background: white;
             border-radius: 20px;
             padding: 28px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
         }
-
         .post-card:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
         }
-
         .post-title {
             font-size: 1.5rem;
             margin-bottom: 12px;
         }
-
         .post-title a {
             color: #2d3748;
             text-decoration: none;
             cursor: pointer;
         }
-
         .post-title a:hover {
             color: #3182ce;
         }
-
         .post-meta {
             display: flex;
             gap: 20px;
@@ -164,37 +133,21 @@
             font-size: 0.85rem;
             color: #a0aec0;
         }
-
         .post-excerpt {
             color: #4a5568;
-            line-height: 1.7;
         }
-
         .read-more {
             display: inline-block;
             margin-top: 16px;
             color: #3182ce;
             text-decoration: none;
-            font-weight: 500;
             cursor: pointer;
         }
-
-        .read-more:hover {
-            text-decoration: underline;
-        }
-
         .loading {
             text-align: center;
             padding: 60px;
             color: #a0aec0;
         }
-
-        .error {
-            text-align: center;
-            padding: 60px;
-            color: #e53e3e;
-        }
-
         @media (max-width: 768px) {
             .container {
                 flex-direction: column;
@@ -218,7 +171,7 @@
     <div class="container">
         <aside class="sidebar">
             <div class="logo-area">
-                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Crect width='120' height='120' fill='%234A5568'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='white' font-size='16' font-family='Arial'%3EBLOG%3C/text%3E%3C/svg%3E" alt="Logo" class="logo" id="logo">
+                <img src="" alt="Logo" class="logo" id="logo">
                 <div class="beijing-time" id="beijingTime">--:--:--</div>
             </div>
             <div class="shortcuts">
@@ -226,10 +179,9 @@
                 <div class="shortcut-buttons" id="shortcutsList"></div>
             </div>
         </aside>
-
         <main class="main-content">
             <div class="blog-header">
-                <h1>📝 我的博客</h1>
+                <h1>我的博客</h1>
                 <p>记录思考，分享技术</p>
             </div>
             <div id="postsContainer" class="posts-list">
@@ -237,194 +189,148 @@
             </div>
         </main>
     </div>
-
     <script>
-        // 北京时间显示
-        function updateBeijingTime() {
-            var now = new Date();
-            var year = now.getFullYear();
-            var month = (now.getMonth() + 1).toString().padStart(2, '0');
-            var day = now.getDate().toString().padStart(2, '0');
-            var hours = now.getHours().toString().padStart(2, '0');
-            var minutes = now.getMinutes().toString().padStart(2, '0');
-            var seconds = now.getSeconds().toString().padStart(2, '0');
-            var timeStr = year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds;
-            document.getElementById('beijingTime').innerHTML = timeStr;
-        }
-        updateBeijingTime();
-        setInterval(updateBeijingTime, 1000);
-
-        // 快捷按钮
-        var shortcutsList = [
-            ['GitHub', 'https://github.com'],
-            ['Google', 'https://www.google.com'],
-            ['Stack Overflow', 'https://stackoverflow.com'],
-            ['掘金', 'https://juejin.cn'],
-            ['知乎', 'https://zhihu.com'],
-            ['阮一峰', 'https://www.ruanyifeng.com'],
-            ['Vue.js', 'https://vuejs.org'],
-            ['React', 'https://reactjs.org'],
-            ['Tailwind CSS', 'https://tailwindcss.com'],
-            ['MDN', 'https://developer.mozilla.org']
-        ];
-
-        // 文章列表
-        var articlesList = [
-            { title: '欢迎来到我的博客', date: '2026-04-26', file: 'posts/welcome.md' },
-            { title: 'EdgeOne Pages 部署教程', date: '2026-04-25', file: 'posts/edgeone-tutorial.md' },
-            { title: 'Markdown 写作指南', date: '2026-04-24', file: 'posts/markdown-guide.md' }
-        ];
-
-        var loadedArticles = [];
-
-        // 简单的 Markdown 解析
-        function parseMarkdown(md) {
-            if (!md) return '';
-            var html = md;
-            html = html.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-            html = html.replace(/^# (.*$)/gm, '<h1>$1</h1>');
-            html = html.replace(/^## (.*$)/gm, '<h2>$1</h2>');
-            html = html.replace(/^### (.*$)/gm, '<h3>$1</h3>');
-            html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-            html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
-            html = html.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
-            html = html.replace(/`(.*?)`/g, '<code>$1</code>');
-            html = html.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank">$1</a>');
-            html = html.replace(/!\[(.*?)\]\((.*?)\)/g, '<img src="$2" alt="$1" style="max-width:100%">');
-            html = html.replace(/^- (.*$)/gm, '<li>$1</li>');
-            html = html.replace(/^[0-9]+\. (.*$)/gm, '<li>$1</li>');
-            html = html.replace(/^(?!<[a-z])(.*$)/gm, '<p>$1</p>');
-            html = html.replace(/\n/g, '<br>');
-            return html;
-        }
-
-        // 提取摘要
-        function getExcerpt(md) {
-            if (!md) return '';
-            var text = md.replace(/[#*`\[\]()>]/g, '').substring(0, 200);
-            return text + (text.length >= 200 ? '...' : '');
-        }
-
-        // 渲染快捷按钮
-        function renderShortcuts() {
-            var container = document.getElementById('shortcutsList');
-            var html = '';
-            for (var i = 0; i < shortcutsList.length; i++) {
-                html += '<a href="' + shortcutsList[i][1] + '" target="_blank" class="shortcut-btn">';
-                html += shortcutsList[i][0];
-                html += '</a>';
+        (function() {
+            var logoImg = document.getElementById('logo');
+            logoImg.src = 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'120\' height=\'120\' viewBox=\'0 0 120 120\'%3E%3Crect width=\'120\' height=\'120\' fill=\'%234A5568\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' text-anchor=\'middle\' dy=\'.3em\' fill=\'white\' font-size=\'16\'%3EBLOG%3C/text%3E%3C/svg%3E';
+            
+            fetch('images/logo.png').then(function(r) {
+                if(r.ok) logoImg.src = 'images/logo.png';
+            }).catch(function(){});
+            
+            function updateTime() {
+                var d = new Date();
+                var y = d.getFullYear();
+                var m = String(d.getMonth() + 1).padStart(2,'0');
+                var day = String(d.getDate()).padStart(2,'0');
+                var h = String(d.getHours()).padStart(2,'0');
+                var min = String(d.getMinutes()).padStart(2,'0');
+                var s = String(d.getSeconds()).padStart(2,'0');
+                document.getElementById('beijingTime').innerHTML = y + '-' + m + '-' + day + ' ' + h + ':' + min + ':' + s;
             }
-            container.innerHTML = html;
-        }
-
-        // 显示文章
-        function showArticle(article) {
-            var win = window.open();
-            var html = '<!DOCTYPE html><html><head><meta charset="UTF-8">';
-            html += '<title>' + article.title + '</title>';
-            html += '<style>';
-            html += 'body{font-family:Arial;max-width:800px;margin:0 auto;padding:40px;background:#f9fafb;line-height:1.8;}';
-            html += '.post-header{border-bottom:2px solid #ccc;padding-bottom:20px;margin-bottom:30px;}';
-            html += '.post-title{font-size:32px;margin-bottom:10px;}';
-            html += '.post-date{color:#666;}';
-            html += '.post-content{background:white;padding:30px;border-radius:10px;}';
-            html += '.post-content img{max-width:100%;}';
-            html += '.back-link{display:inline-block;margin-top:30px;color:#3182ce;cursor:pointer;}';
-            html += '</style>';
-            html += '</head><body>';
-            html += '<div class="post-header">';
-            html += '<h1 class="post-title">' + article.title + '</h1>';
-            html += '<div class="post-date">📅 ' + article.date + '</div>';
-            html += '</div>';
-            html += '<div class="post-content">' + article.htmlContent + '</div>';
-            html += '<a href="javascript:window.close()" class="back-link">← 关闭窗口</a>';
-            html += '</body></html>';
-            win.document.write(html);
-            win.document.close();
-        }
-
-        // 加载文章
-        function loadArticles() {
+            updateTime();
+            setInterval(updateTime, 1000);
+            
+            var shortcuts = [
+                ['GitHub', 'https://github.com'],
+                ['Google', 'https://www.google.com'],
+                ['Stack Overflow', 'https://stackoverflow.com'],
+                ['掘金', 'https://juejin.cn'],
+                ['知乎', 'https://zhihu.com'],
+                ['阮一峰', 'https://www.ruanyifeng.com'],
+                ['Vue.js', 'https://vuejs.org'],
+                ['React', 'https://reactjs.org'],
+                ['Tailwind CSS', 'https://tailwindcss.com'],
+                ['MDN', 'https://developer.mozilla.org']
+            ];
+            
+            var shortcutsHtml = '';
+            for(var i = 0; i < shortcuts.length; i++) {
+                shortcutsHtml += '<a href="' + shortcuts[i][1] + '" target="_blank" class="shortcut-btn">' + shortcuts[i][0] + '</a>';
+            }
+            document.getElementById('shortcutsList').innerHTML = shortcutsHtml;
+            
+            var posts = [
+                {title: '欢迎来到我的博客', date: '2026-04-26', file: 'posts/welcome.md'},
+                {title: 'EdgeOne Pages 部署教程', date: '2026-04-25', file: 'posts/edgeone-tutorial.md'},
+                {title: 'Markdown 写作指南', date: '2026-04-24', file: 'posts/markdown-guide.md'}
+            ];
+            
+            function mdToHtml(md) {
+                if(!md) return '';
+                var h = md;
+                h = h.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                h = h.replace(/^# (.*$)/gm, '<h1>$1</h1>');
+                h = h.replace(/^## (.*$)/gm, '<h2>$1</h2>');
+                h = h.replace(/^### (.*$)/gm, '<h3>$1</h3>');
+                h = h.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                h = h.replace(/\*(.*?)\*/g, '<em>$1</em>');
+                h = h.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
+                h = h.replace(/`(.*?)`/g, '<code>$1</code>');
+                h = h.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank">$1</a>');
+                h = h.replace(/!\[(.*?)\]\((.*?)\)/g, '<img src="$2" alt="$1" style="max-width:100%">');
+                h = h.replace(/^- (.*$)/gm, '<li>$1</li>');
+                h = h.replace(/^[0-9]+\. (.*$)/gm, '<li>$1</li>');
+                h = h.replace(/^(?!<[a-z])(.*$)/gm, '<p>$1</p>');
+                h = h.replace(/\n/g, '<br>');
+                return h;
+            }
+            
+            function getExcerpt(md) {
+                if(!md) return '';
+                var text = md.replace(/[#*`\[\]()>]/g, '').substring(0, 200);
+                if(text.length >= 200) text = text + '...';
+                return text;
+            }
+            
+            var loadedPosts = [];
             var container = document.getElementById('postsContainer');
-            container.innerHTML = '<div class="loading">加载文章中...</div>';
+            
+            function showPost(index) {
+                var p = loadedPosts[index];
+                if(!p) return;
+                var win = window.open();
+                var html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>' + p.title + '</title>';
+                html += '<style>body{font-family:Arial;max-width:800px;margin:0 auto;padding:40px;background:#f9fafb;line-height:1.8;}';
+                html += '.post-header{border-bottom:2px solid #ccc;padding-bottom:20px;margin-bottom:30px;}';
+                html += '.post-title{font-size:32px;margin-bottom:10px;}';
+                html += '.post-date{color:#666;}';
+                html += '.post-content{background:white;padding:30px;border-radius:10px;}';
+                html += '.back-link{display:inline-block;margin-top:30px;color:#3182ce;cursor:pointer;}';
+                html += '</style></head><body>';
+                html += '<div class="post-header"><h1 class="post-title">' + p.title + '</h1>';
+                html += '<div class="post-date">' + p.date + '</div></div>';
+                html += '<div class="post-content">' + p.html + '</div>';
+                html += '<a href="javascript:window.close()" class="back-link">关闭窗口</a>';
+                html += '</body></html>';
+                win.document.write(html);
+                win.document.close();
+            }
+            
+            window.showPost = showPost;
             
             var promises = [];
-            for (var i = 0; i < articlesList.length; i++) {
-                var article = articlesList[i];
-                var promise = fetch(article.file)
-                    .then(function(response) {
-                        if (!response.ok) throw new Error('加载失败');
-                        return response.text();
-                    })
-                    .then(function(md) {
-                        return {
-                            title: article.title,
-                            date: article.date,
-                            file: article.file,
-                            htmlContent: parseMarkdown(md),
-                            excerpt: getExcerpt(md)
-                        };
-                    })
-                    .catch(function() {
-                        return {
-                            title: article.title,
-                            date: article.date,
-                            file: article.file,
-                            htmlContent: '<p>文章加载失败</p>',
-                            excerpt: '文章加载失败'
-                        };
-                    });
+            for(var i = 0; i < posts.length; i++) {
+                var p = posts[i];
+                var promise = fetch(p.file).then(function(res) {
+                    if(!res.ok) throw new Error();
+                    return res.text();
+                }).then(function(md) {
+                    return {
+                        title: p.title,
+                        date: p.date,
+                        html: mdToHtml(md),
+                        excerpt: getExcerpt(md)
+                    };
+                }).catch(function() {
+                    return {
+                        title: p.title,
+                        date: p.date,
+                        html: '<p>文章加载失败</p>',
+                        excerpt: '文章加载失败'
+                    };
+                });
                 promises.push(promise);
             }
             
-            Promise.all(promises).then(function(articles) {
-                loadedArticles = articles;
+            Promise.all(promises).then(function(results) {
+                loadedPosts = results;
                 var html = '';
-                for (var i = 0; i < loadedArticles.length; i++) {
-                    var a = loadedArticles[i];
-                    var minutes = Math.max(1, Math.ceil(a.excerpt.length / 200));
-                    html += '<article class="post-card">';
-                    html += '<h2 class="post-title">';
-                    html += '<a href="javascript:void(0)" onclick="window.viewArticle(' + i + ')">';
-                    html += a.title;
-                    html += '</a>';
-                    html += '</h2>';
-                    html += '<div class="post-meta">';
-                    html += '<span>📅 ' + a.date + '</span>';
-                    html += '<span>📖 约 ' + minutes + ' 分钟</span>';
+                for(var i = 0; i < results.length; i++) {
+                    var r = results[i];
+                    var minutes = Math.max(1, Math.ceil(r.excerpt.length / 200));
+                    html += '<div class="post-card">';
+                    html += '<h2 class="post-title"><a href="javascript:showPost(' + i + ')">' + r.title + '</a></h2>';
+                    html += '<div class="post-meta"><span>' + r.date + '</span><span>约 ' + minutes + ' 分钟</span></div>';
+                    html += '<div class="post-excerpt"><p>' + r.excerpt + '</p></div>';
+                    html += '<a href="javascript:showPost(' + i + ')" class="read-more">阅读全文 →</a>';
                     html += '</div>';
-                    html += '<div class="post-excerpt">';
-                    html += '<p>' + a.excerpt + '</p>';
-                    html += '</div>';
-                    html += '<a href="javascript:void(0)" class="read-more" onclick="window.viewArticle(' + i + ')">';
-                    html += '阅读全文 →';
-                    html += '</a>';
-                    html += '</article>';
                 }
                 container.innerHTML = html;
             }).catch(function() {
-                container.innerHTML = '<div class="error">加载失败，请刷新重试</div>';
+                container.innerHTML = '<div class="loading">加载失败，请刷新</div>';
             });
-        }
-
-        // 全局函数
-        window.viewArticle = function(index) {
-            if (loadedArticles[index]) {
-                showArticle(loadedArticles[index]);
-            }
-        };
-
-        // 尝试加载自定义 Logo
-        function loadLogo() {
-            fetch('images/logo.png').then(function(r) {
-                if (r.ok) document.getElementById('logo').src = 'images/logo.png';
-            }).catch(function() {});
-        }
-
-        // 初始化
-        renderShortcuts();
-        loadArticles();
-        loadLogo();
+        })();
     </script>
 </body>
 </html>
