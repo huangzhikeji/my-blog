@@ -4,28 +4,23 @@
     <meta charset="UTF-8">
     <title>My Blog</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
         body {
             font-family: Arial, sans-serif;
-            background: #f0f0f0;
+            max-width: 1000px;
+            margin: 0 auto;
             padding: 20px;
         }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            gap: 30px;
-        }
         .sidebar {
-            width: 280px;
+            float: left;
+            width: 250px;
+            margin-right: 30px;
         }
-        .logo-area {
-            background: white;
-            border-radius: 16px;
+        .main {
+            float: left;
+            width: calc(100% - 280px);
+        }
+        .logo-box {
+            background: #f0f0f0;
             padding: 20px;
             text-align: center;
             margin-bottom: 20px;
@@ -35,178 +30,158 @@
             height: 120px;
             background: navy;
             color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 15px;
-            border-radius: 60px;
-            font-size: 20px;
+            line-height: 120px;
+            margin: 0 auto;
+            border-radius: 50%;
         }
-        .time {
+        .time-box {
+            margin-top: 10px;
             font-size: 18px;
-            background: #eee;
-            padding: 8px;
-            border-radius: 12px;
         }
-        .shortcuts-area {
-            background: white;
-            border-radius: 16px;
+        .links-box {
+            background: #f0f0f0;
             padding: 20px;
         }
-        .shortcuts-area h3 {
-            margin-bottom: 15px;
-            padding-bottom: 8px;
-            border-bottom: 2px solid #ddd;
-        }
-        .shortcut {
+        .link {
             display: block;
             padding: 8px;
-            background: #f5f5f5;
-            text-decoration: none;
-            color: #0066cc;
-            text-align: center;
-            margin-bottom: 8px;
-            border-radius: 8px;
-        }
-        .main-content {
-            flex: 1;
-        }
-        .header {
-            margin-bottom: 30px;
-        }
-        .header h1 {
-            font-size: 32px;
-            margin-bottom: 8px;
-        }
-        .post-card {
+            margin: 5px 0;
             background: white;
-            border-radius: 16px;
-            padding: 24px;
+            text-decoration: none;
+            color: blue;
+            text-align: center;
+        }
+        .post {
+            background: #f0f0f0;
+            padding: 20px;
             margin-bottom: 20px;
         }
-        .post-title {
-            font-size: 24px;
+        .post h2 {
+            margin: 0 0 10px 0;
+        }
+        .post h2 a {
+            text-decoration: none;
+            color: black;
+        }
+        .date {
+            color: gray;
+            font-size: 14px;
             margin-bottom: 10px;
         }
-        .post-title a {
-            text-decoration: none;
-            color: #333;
-        }
-        .post-meta {
-            color: #999;
-            font-size: 14px;
-            margin-bottom: 15px;
-        }
-        .readmore {
-            display: inline-block;
-            margin-top: 10px;
-            color: #0066cc;
-        }
-        .loading {
-            text-align: center;
-            padding: 50px;
-            color: #999;
+        .clearfix::after {
+            content: "";
+            clear: both;
+            display: table;
         }
         @media (max-width: 768px) {
-            .container {
-                flex-direction: column;
-            }
-            .sidebar {
+            .sidebar, .main {
+                float: none;
                 width: 100%;
             }
         }
     </style>
 </head>
 <body>
-
-<div class="container">
+<div class="clearfix">
     <div class="sidebar">
-        <div class="logo-area">
+        <div class="logo-box">
             <div class="logo">BLOG</div>
-            <div class="time" id="time"></div>
+            <div class="time-box" id="time"></div>
         </div>
-        <div class="shortcuts-area">
-            <h3>Quick Links</h3>
-            <div id="shortcuts"></div>
+        <div class="links-box">
+            <strong>Quick Links</strong>
+            <div id="links"></div>
         </div>
     </div>
-    <div class="main-content">
-        <div class="header">
-            <h1>My Blog</h1>
-            <p>Share knowledge and experiences</p>
-        </div>
-        <div id="posts"><div class="loading">Loading posts...</div></div>
+    <div class="main">
+        <h1>My Blog</h1>
+        <div id="posts"></div>
     </div>
 </div>
 
 <script>
-function showTime() {
+function updateTime() {
     var d = new Date();
     var h = d.getHours();
     var m = d.getMinutes();
     var s = d.getSeconds();
-    if (h < 10) h = '0' + h;
-    if (m < 10) m = '0' + m;
-    if (s < 10) s = '0' + s;
+    h = h < 10 ? '0' + h : h;
+    m = m < 10 ? '0' + m : m;
+    s = s < 10 ? '0' + s : s;
     document.getElementById('time').innerHTML = h + ':' + m + ':' + s;
 }
-showTime();
-setInterval(showTime, 1000);
+updateTime();
+setInterval(updateTime, 1000);
 
-var links = [
-    ['GitHub', 'https://github.com'],
-    ['Google', 'https://google.com'],
-    ['Stack Overflow', 'https://stackoverflow.com'],
-    ['Juejin', 'https://juejin.cn'],
-    ['Zhihu', 'https://zhihu.com'],
-    ['Ruan Yifeng', 'https://ruanyifeng.com'],
-    ['Vue', 'https://vuejs.org'],
-    ['React', 'https://reactjs.org'],
-    ['Tailwind', 'https://tailwindcss.com'],
-    ['MDN', 'https://developer.mozilla.org']
+var linkNames = ['GitHub', 'Google', 'StackOverflow', 'Juejin', 'Zhihu', 'RuanYifeng', 'Vue', 'React', 'Tailwind', 'MDN'];
+var linkUrls = [
+    'https://github.com',
+    'https://google.com',
+    'https://stackoverflow.com',
+    'https://juejin.cn',
+    'https://zhihu.com',
+    'https://ruanyifeng.com',
+    'https://vuejs.org',
+    'https://reactjs.org',
+    'https://tailwindcss.com',
+    'https://developer.mozilla.org'
 ];
 
-var shortcutsHtml = '';
-for (var i = 0; i < links.length; i++) {
-    shortcutsHtml = shortcutsHtml + '<a class="shortcut" href="' + links[i][1] + '" target="_blank">' + links[i][0] + '</a>';
+var linkHtml = '';
+for (var i = 0; i < linkNames.length; i++) {
+    linkHtml = linkHtml + '<a class="link" href="' + linkUrls[i] + '" target="_blank">' + linkNames[i] + '</a>';
 }
-document.getElementById('shortcuts').innerHTML = shortcutsHtml;
+document.getElementById('links').innerHTML = linkHtml;
 
-var postsData = [
-    {title: 'Welcome to My Blog', date: '2026-04-26', content: '<p>Welcome to my blog. This is the first post.</p><p>I will share technical knowledge and experiences here.</p>', excerpt: 'Welcome to my blog. This is the first post.'},
-    {title: 'EdgeOne Pages Tutorial', date: '2026-04-25', content: '<p>EdgeOne Pages is a static site hosting platform.</p><p>Steps: 1. Login 2. Import repo 3. Deploy</p>', excerpt: 'EdgeOne Pages is a static site hosting platform.'},
-    {title: 'Markdown Guide', date: '2026-04-24', content: '<p>Markdown is a lightweight markup language.</p><p>Use # for headers, - for lists, ** for bold.</p>', excerpt: 'Markdown is a lightweight markup language.'}
+var posts = [
+    {title: 'Welcome to My Blog', date: '2026-04-26', file: 'posts/welcome.md'},
+    {title: 'EdgeOne Pages Tutorial', date: '2026-04-25', file: 'posts/edgeone-tutorial.md'},
+    {title: 'Markdown Guide', date: '2026-04-24', file: 'posts/markdown-guide.md'}
 ];
 
-function viewPost(idx) {
-    var p = postsData[idx];
+function showPost(title, date, content) {
     var w = window.open();
-    w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>' + p.title + '</title>');
-    w.document.write('<style>body{font-family:Arial;max-width:800px;margin:0 auto;padding:40px;}</style>');
-    w.document.write('</head><body>');
-    w.document.write('<h1>' + p.title + '</h1>');
-    w.document.write('<p style="color:#999;">' + p.date + '</p>');
-    w.document.write('<hr>');
-    w.document.write(p.content);
+    w.document.write('<html><head><title>' + title + '</title></head><body>');
+    w.document.write('<h1>' + title + '</h1>');
+    w.document.write('<p>' + date + '</p><hr>');
+    w.document.write(content);
     w.document.write('<hr><p><a href="javascript:window.close()">Close</a></p>');
     w.document.write('</body></html>');
     w.document.close();
 }
 
-window.viewPost = viewPost;
+function loadPost(index) {
+    var p = posts[index];
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', p.file, true);
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            var content = xhr.responseText;
+            content = content.replace(/^# (.*$)/gm, '<h1>$1</h1>');
+            content = content.replace(/^## (.*$)/gm, '<h2>$1</h2>');
+            content = content.replace(/\n/g, '<br>');
+            showPost(p.title, p.date, content);
+        } else {
+            showPost(p.title, p.date, '<p>Failed to load post</p>');
+        }
+    };
+    xhr.onerror = function() {
+        showPost(p.title, p.date, '<p>Failed to load post</p>');
+    };
+    xhr.send();
+}
+
+window.loadPost = loadPost;
 
 var postsHtml = '';
-for (var i = 0; i < postsData.length; i++) {
-    var p = postsData[i];
-    postsHtml = postsHtml + '<div class="post-card">';
-    postsHtml = postsHtml + '<h2 class="post-title"><a href="javascript:viewPost(' + i + ')">' + p.title + '</a></h2>';
-    postsHtml = postsHtml + '<div class="post-meta">' + p.date + '</div>';
-    postsHtml = postsHtml + '<p>' + p.excerpt + '</p>';
-    postsHtml = postsHtml + '<a class="readmore" href="javascript:viewPost(' + i + ')">Read More →</a>';
+for (var i = 0; i < posts.length; i++) {
+    var p = posts[i];
+    postsHtml = postsHtml + '<div class="post">';
+    postsHtml = postsHtml + '<h2><a href="javascript:loadPost(' + i + ')">' + p.title + '</a></h2>';
+    postsHtml = postsHtml + '<div class="date">' + p.date + '</div>';
     postsHtml = postsHtml + '</div>';
 }
 document.getElementById('posts').innerHTML = postsHtml;
 </script>
-
 </body>
 </html>
