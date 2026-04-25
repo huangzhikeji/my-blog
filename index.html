@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html>
 <head>
     <meta charset="UTF-8">
     <title>我的博客</title>
@@ -9,184 +9,93 @@
             max-width: 1000px;
             margin: 0 auto;
             padding: 20px;
-            background: #f0f0f0;
-        }
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
         }
         .logo {
             width: 120px;
             height: 120px;
-            background: #333;
+            background: navy;
             color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 10px;
+            display: inline-block;
+            text-align: center;
+            line-height: 120px;
             border-radius: 60px;
-            font-size: 20px;
         }
         .time {
-            font-size: 16px;
-            color: #666;
             margin: 10px 0;
         }
-        .shortcuts {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 30px;
-        }
-        .shortcuts a {
-            padding: 8px 16px;
-            background: white;
-            border: 1px solid #ddd;
+        .shortcut {
+            display: inline-block;
+            margin: 5px;
+            padding: 5px 10px;
+            background: #eee;
             text-decoration: none;
-            color: #333;
-            border-radius: 20px;
-        }
-        .shortcuts a:hover {
-            background: #333;
-            color: white;
-        }
-        .posts {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
+            color: black;
         }
         .post {
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid #ccc;
             padding: 20px 0;
-        }
-        .post h2 {
-            margin: 0 0 10px 0;
-        }
-        .post h2 a {
-            color: #333;
-            text-decoration: none;
-        }
-        .post .date {
-            color: #999;
-            font-size: 14px;
-            margin-bottom: 10px;
-        }
-        .post .excerpt {
-            color: #666;
-            line-height: 1.6;
-        }
-        .post .readmore {
-            display: inline-block;
-            margin-top: 10px;
-            color: #0066cc;
-            text-decoration: none;
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="header">
-        <div class="logo">LOGO</div>
-        <div class="time" id="time"></div>
-        <div class="shortcuts" id="shortcuts"></div>
-    </div>
-
-    <div class="posts" id="posts"></div>
+<div style="text-align: center;">
+    <div class="logo">BLOG</div>
+    <div class="time" id="time"></div>
+    <div id="shortcuts"></div>
 </div>
 
+<div id="posts"></div>
+
 <script>
-// 北京时间
-function updateTime() {
-    var date = new Date();
-    var hours = date.getHours();
-    var minutes = date.getMinutes();
-    var seconds = date.getSeconds();
-    hours = hours < 10 ? '0' + hours : hours;
-    minutes = minutes < 10 ? '0' + minutes : minutes;
-    seconds = seconds < 10 ? '0' + seconds : seconds;
-    document.getElementById('time').innerHTML = hours + ':' + minutes + ':' + seconds;
+// 显示时间
+function showTime() {
+    var d = new Date();
+    var h = d.getHours();
+    var m = d.getMinutes();
+    var s = d.getSeconds();
+    if (h < 10) h = '0' + h;
+    if (m < 10) m = '0' + m;
+    if (s < 10) s = '0' + s;
+    document.getElementById('time').innerHTML = h + ':' + m + ':' + s;
 }
-updateTime();
-setInterval(updateTime, 1000);
+showTime();
+setInterval(showTime, 1000);
 
 // 快捷按钮
-var buttons = [
-    {name: 'GitHub', url: 'https://github.com'},
-    {name: 'Google', url: 'https://google.com'},
-    {name: 'Stack Overflow', url: 'https://stackoverflow.com'},
-    {name: '掘金', url: 'https://juejin.cn'},
-    {name: '知乎', url: 'https://zhihu.com'},
-    {name: '阮一峰', url: 'https://ruanyifeng.com'},
-    {name: 'Vue.js', url: 'https://vuejs.org'},
-    {name: 'React', url: 'https://reactjs.org'},
-    {name: 'Tailwind', url: 'https://tailwindcss.com'},
-    {name: 'MDN', url: 'https://developer.mozilla.org'}
+var sites = [
+    'GitHub', 'Google', 'Stack Overflow', '掘金', '知乎',
+    '阮一峰', 'Vue.js', 'React', 'Tailwind', 'MDN'
+];
+var urls = [
+    'https://github.com', 'https://google.com', 'https://stackoverflow.com', 'https://juejin.cn', 'https://zhihu.com',
+    'https://ruanyifeng.com', 'https://vuejs.org', 'https://reactjs.org', 'https://tailwindcss.com', 'https://developer.mozilla.org'
 ];
 
-var shortcutsHtml = '';
-for (var i = 0; i < buttons.length; i++) {
-    shortcutsHtml += '<a href="' + buttons[i].url + '" target="_blank">' + buttons[i].name + '</a>';
+var html = '';
+for (var i = 0; i < sites.length; i++) {
+    html = html + '<a class="shortcut" href="' + urls[i] + '" target="_blank">' + sites[i] + '</a>';
 }
-document.getElementById('shortcuts').innerHTML = shortcutsHtml;
+document.getElementById('shortcuts').innerHTML = html;
 
-// 文章数据（后续可以从md文件加载）
-var articles = [
-    {
-        title: '欢迎来到我的博客',
-        date: '2026-04-26',
-        content: '这是我的第一篇博客文章。欢迎访问！',
-        file: 'posts/welcome.md'
-    },
-    {
-        title: 'EdgeOne Pages 部署教程',
-        date: '2026-04-25',
-        content: '介绍如何使用 EdgeOne Pages 部署静态网站。',
-        file: 'posts/edgeone-tutorial.md'
-    },
-    {
-        title: 'Markdown 写作指南',
-        date: '2026-04-24',
-        content: 'Markdown 语法介绍和使用技巧。',
-        file: 'posts/markdown-guide.md'
-    }
+// 文章数据
+var posts = [
+    {title: '欢迎来到我的博客', date: '2026-04-26', content: '这是第一篇博客文章的内容。'},
+    {title: 'EdgeOne Pages 部署', date: '2026-04-25', content: 'EdgeOne Pages 部署教程的内容。'},
+    {title: 'Markdown 指南', date: '2026-04-24', content: 'Markdown 写作指南的内容。'}
 ];
-
-// 加载文章
-function loadPosts() {
-    var postsHtml = '';
-    for (var i = 0; i < articles.length; i++) {
-        var article = articles[i];
-        postsHtml += '<div class="post">';
-        postsHtml += '<h2><a href="#" onclick="showPost(' + i + '); return false;">' + article.title + '</a></h2>';
-        postsHtml += '<div class="date">' + article.date + '</div>';
-        postsHtml += '<div class="excerpt">' + article.content + '</div>';
-        postsHtml += '<a href="#" class="readmore" onclick="showPost(' + i + '); return false;">阅读全文 →</a>';
-        postsHtml += '</div>';
-    }
-    document.getElementById('posts').innerHTML = postsHtml;
-}
 
 // 显示文章
-function showPost(index) {
-    var article = articles[index];
-    var win = window.open();
-    var html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>' + article.title + '</title>';
-    html += '<style>body{font-family:Arial;max-width:800px;margin:0 auto;padding:40px;line-height:1.8;}</style>';
-    html += '</head><body>';
-    html += '<h1>' + article.title + '</h1>';
-    html += '<p style="color:#999;">' + article.date + '</p>';
-    html += '<hr>';
-    html += '<p>' + article.content + '</p>';
-    html += '<hr><p><a href="javascript:window.close()">关闭窗口</a></p>';
-    html += '</body></html>';
-    win.document.write(html);
-    win.document.close();
+var postsHtml = '';
+for (var i = 0; i < posts.length; i++) {
+    var p = posts[i];
+    postsHtml = postsHtml + '<div class="post">';
+    postsHtml = postsHtml + '<h2>' + p.title + '</h2>';
+    postsHtml = postsHtml + '<div>' + p.date + '</div>';
+    postsHtml = postsHtml + '<p>' + p.content + '</p>';
+    postsHtml = postsHtml + '</div>';
 }
-
-// 初始化
-loadPosts();
+document.getElementById('posts').innerHTML = postsHtml;
 </script>
 
 </body>
