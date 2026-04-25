@@ -35,6 +35,24 @@
             border-bottom: 1px solid #ccc;
             padding: 20px 0;
         }
+        .post h2 a {
+            text-decoration: none;
+            color: #333;
+        }
+        .post h2 a:hover {
+            color: blue;
+        }
+        .readmore {
+            display: inline-block;
+            margin-top: 10px;
+            color: blue;
+            cursor: pointer;
+        }
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: #999;
+        }
     </style>
 </head>
 <body>
@@ -45,7 +63,7 @@
     <div id="shortcuts"></div>
 </div>
 
-<div id="posts"></div>
+<div id="posts"><div class="loading">加载文章中...</div></div>
 
 <script>
 // 显示时间
@@ -78,24 +96,109 @@ for (var i = 0; i < sites.length; i++) {
 }
 document.getElementById('shortcuts').innerHTML = html;
 
-// 文章数据
-var posts = [
-    {title: '欢迎来到我的博客', date: '2026-04-26', content: '这是第一篇博客文章的内容。'},
-    {title: 'EdgeOne Pages 部署', date: '2026-04-25', content: 'EdgeOne Pages 部署教程的内容。'},
-    {title: 'Markdown 指南', date: '2026-04-24', content: 'Markdown 写作指南的内容。'}
+// 文章配置（文件路径）
+var postsConfig = [
+    {title: '欢迎来到我的博客', date: '2026-04-26', file: 'posts/welcome.md'},
+    {title: 'EdgeOne Pages 部署', date: '2026-04-25', file: 'posts/edgeone-tutorial.md'},
+    {title: 'Markdown 指南', date: '2026-04-24', file: 'posts/markdown-guide.md'}
 ];
 
-// 显示文章
-var postsHtml = '';
-for (var i = 0; i < posts.length; i++) {
-    var p = posts[i];
-    postsHtml = postsHtml + '<div class="post">';
-    postsHtml = postsHtml + '<h2>' + p.title + '</h2>';
-    postsHtml = postsHtml + '<div>' + p.date + '</div>';
-    postsHtml = postsHtml + '<p>' + p.content + '</p>';
-    postsHtml = postsHtml + '</div>';
+var loadedPosts = [];
+
+// 简单的md转html
+function mdToHtml(md) {
+    if (!md) return '';
+    var h = md;
+    h = h.replace(/^# (.*$)/gm, '<h1>$1</h1>');
+    h = h.replace(/^## (.*$)/gm, '<h2>$1</h2>');
+    h = h.replace(/^### (.*$)/gm, '<h3>$1</h3>');
+    h = h.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    h = h.replace(/\*(.*?)\*/g, '<em>$1</em>');
+    h = h.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank">$1</a>');
+    h = h.replace(/^- (.*$)/gm, '<li>$1</li>');
+    h = h.replace(/^[0-9]+\. (.*$)/gm, '<li>$1</li>');
+    h = h.replace(/\n/g, '<br>');
+    return h;
 }
-document.getElementById('posts').innerHTML = postsHtml;
+
+// 获取摘要
+function getExcerpt(md) {
+    if (!md) return '';
+    var text = md.replace(/[#*]/g, '').substring(0, 150);
+    if (text.length >= 150) text = text + '...';
+    return text;
+}
+
+// 显示文章
+function showPost(index) {
+    var post = loadedPosts[index];
+    if (!post) return;
+    var win = window.open();
+    var page = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>' + post.title + '</title>';
+    page = page + '<style>body{font-family:Arial;max-width:800px;margin:0 auto;padding:40px;line-height:1.8;}</style>';
+    page = page + '</head><body>';
+    page = page + '<h1>' + post.title + '</h1>';
+    page = page + '<p style="color:#999;">' + post.date + '</p>';
+    page = page + '<hr>';
+    page = page + post.html;
+    page = page + '<hr><p><a href="javascript:window.close()">关闭窗口</a></p>';
+    page = page + '</body></html>';
+    win.document.write(page);
+    win.document.close();
+}
+
+window.showPost = showPost;
+
+// 加载文章
+function loadPosts() {
+    var promises = [];
+    
+    for (var i = 0; i < postsConfig.length; i++) {
+        var config = postsConfig[i];
+        var promise = fetch(config.file)
+            .then(function(response) {
+                if (!response.ok) throw new Error('load failed');
+                return response.text();
+            })
+            .then(function(md) {
+                return {
+                    title: config.title,
+                    date: config.date,
+                    html: mdToHtml(md),
+                    excerpt: getExcerpt(md)
+                };
+            })
+            .catch(function() {
+                return {
+                    title: config.title,
+                    date: config.date,
+                    html: '<p>文章加载失败</p>',
+                    excerpt: '文章加载失败'
+                };
+            });
+        promises.push(promise);
+    }
+    
+    Promise.all(promises).then(function(results) {
+        loadedPosts = results;
+        var postsHtml = '';
+        for (var i = 0; i < results.length; i++) {
+            var p = results[i];
+            postsHtml = postsHtml + '<div class="post">';
+            postsHtml = postsHtml + '<h2><a href="javascript:showPost(' + i + ')">' + p.title + '</a></h2>';
+            postsHtml = postsHtml + '<div>' + p.date + '</div>';
+            postsHtml = postsHtml + '<p>' + p.excerpt + '</p>';
+            postsHtml = postsHtml + '<a class="readmore" href="javascript:showPost(' + i + ')">阅读全文 →</a>';
+            postsHtml = postsHtml + '</div>';
+        }
+        document.getElementById('posts').innerHTML = postsHtml;
+    }).catch(function(err) {
+        document.getElementById('posts').innerHTML = '<div class="loading">加载失败，请刷新</div>';
+    });
+}
+
+// 开始加载
+loadPosts();
 </script>
 
 </body>
