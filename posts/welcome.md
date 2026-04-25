@@ -1,11 +1,19 @@
-# Welcome to My Blog
+# 欢迎来到我的博客
 
-Hello everyone! Welcome to my blog.
+大家好！欢迎访问我的个人博客。
 
-## Why Blog?
+## 为什么写博客？
 
-Record technical growth and share learning experiences.
+记录技术成长、分享学习心得是一件非常有意义的事情。
 
-- Deepen understanding
-- Help others
-- Build personal brand
+- 加深对知识的理解
+- 帮助他人解决问题
+- 建立个人品牌
+
+## 博客技术栈
+
+- 部署平台：腾讯云 EdgeOne Pages
+- 代码托管：GitHub
+- 内容格式：Markdown
+
+感谢你的关注！
