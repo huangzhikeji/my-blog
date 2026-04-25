@@ -83,7 +83,6 @@
             font-weight: 500;
             border: 1px solid #e2e8f0;
             text-align: center;
-            transition: all 0.2s;
         }
         .shortcut-btn:hover {
             background: #3182ce;
@@ -110,7 +109,6 @@
             border-radius: 20px;
             padding: 28px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
         }
         .post-card:hover {
             transform: translateY(-2px);
@@ -149,23 +147,6 @@
             text-align: center;
             padding: 60px;
             color: #a0aec0;
-        }
-        /* 修复代码块样式，避免溢出 */
-        pre {
-            background: #f7fafc;
-            padding: 15px;
-            border-radius: 8px;
-            overflow-x: auto;
-            margin: 10px 0;
-        }
-        code {
-            background: #f7fafc;
-            padding: 2px 6px;
-            border-radius: 4px;
-        }
-        ul, ol {
-            margin-left: 20px;
-            margin-bottom: 10px;
         }
         @media (max-width: 768px) {
             .container {
@@ -210,32 +191,31 @@
     </div>
     <script>
         (function() {
-            // 1. 修复Logo加载逻辑
+            // 设置默认logo
             var logoImg = document.getElementById('logo');
-            // 默认SVG Logo
-            logoImg.src = 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'120\' height=\'120\' viewBox=\'0 0 120 120\'%3E%3Crect width=\'120\' height=\'120\' fill=\'%234A5568\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' text-anchor=\'middle\' dy=\'.3em\' fill=\'white\' font-size=\'40\' font-weight=\'bold\'%3EBLOG%3C/text%3E%3C/svg%3E';
+            logoImg.src = 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'120\' height=\'120\' viewBox=\'0 0 120 120\'%3E%3Crect width=\'120\' height=\'120\' fill=\'%234A5568\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' text-anchor=\'middle\' dy=\'.3em\' fill=\'white\' font-size=\'16\'%3EBLOG%3C/text%3E%3C/svg%3E';
             
-            // 尝试加载本地Logo，失败不影响
-            fetch('images/logo.png')
-                .then(r => r.ok && (logoImg.src = 'images/logo.png'))
-                .catch(() => {});
+            // 尝试加载自定义logo
+            fetch('images/logo.png').then(function(r) {
+                if(r.ok) logoImg.src = 'images/logo.png';
+            }).catch(function(){});
             
-            // 2. 实时北京时间（修复原有逻辑，正常运行）
+            // 北京时间
             function updateTime() {
-                const d = new Date();
-                const y = d.getFullYear();
-                const m = String(d.getMonth() + 1).padStart(2,'0');
-                const day = String(d.getDate()).padStart(2,'0');
-                const h = String(d.getHours()).padStart(2,'0');
-                const min = String(d.getMinutes()).padStart(2,'0');
-                const s = String(d.getSeconds()).padStart(2,'0');
-                document.getElementById('beijingTime').textContent = `${y}-${m}-${day} ${h}:${min}:${s}`;
+                var d = new Date();
+                var y = d.getFullYear();
+                var m = String(d.getMonth() + 1).padStart(2,'0');
+                var day = String(d.getDate()).padStart(2,'0');
+                var h = String(d.getHours()).padStart(2,'0');
+                var min = String(d.getMinutes()).padStart(2,'0');
+                var s = String(d.getSeconds()).padStart(2,'0');
+                document.getElementById('beijingTime').innerHTML = y + '-' + m + '-' + day + ' ' + h + ':' + min + ':' + s;
             }
             updateTime();
             setInterval(updateTime, 1000);
             
-            // 3. 快捷链接渲染
-            const shortcuts = [
+            // 快捷按钮
+            var shortcuts = [
                 ['GitHub', 'https://github.com'],
                 ['Google', 'https://www.google.com'],
                 ['Stack Overflow', 'https://stackoverflow.com'],
@@ -248,133 +228,127 @@
                 ['MDN', 'https://developer.mozilla.org']
             ];
             
-            let shortcutsHtml = '';
-            for(let i = 0; i < shortcuts.length; i++) {
-                shortcutsHtml += `<a href="${shortcuts[i][1]}" target="_blank" class="shortcut-btn">${shortcuts[i][0]}</a>`;
+            var shortcutsHtml = '';
+            for(var i = 0; i < shortcuts.length; i++) {
+                shortcutsHtml += '<a href="' + shortcuts[i][1] + '" target="_blank" class="shortcut-btn">' + shortcuts[i][0] + '</a>';
             }
             document.getElementById('shortcutsList').innerHTML = shortcutsHtml;
             
-            // 4. 文章配置
-            const posts = [
+            // 文章列表
+            var posts = [
                 {title: '欢迎来到我的博客', date: '2026-04-26', file: 'posts/welcome.md'},
                 {title: 'EdgeOne Pages 部署教程', date: '2026-04-25', file: 'posts/edgeone-tutorial.md'},
                 {title: 'Markdown 写作指南', date: '2026-04-24', file: 'posts/markdown-guide.md'}
             ];
             
-            // 5. 修复Markdown转换逻辑（核心Bug：循环作用域问题）
+            // Markdown 转 HTML
             function mdToHtml(md) {
-                if(!md) return '<p>暂无内容</p>';
-                let html = md;
-                // 转义特殊字符
-                html = html.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-                // 标题
-                html = html.replace(/^# (.*$)/gm, '<h1>$1</h1>');
-                html = html.replace(/^## (.*$)/gm, '<h2>$1</h2>');
-                html = html.replace(/^### (.*$)/gm, '<h3>$1</h3>');
-                // 粗体/斜体
-                html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-                html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
-                // 代码块
-                html = html.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
-                html = html.replace(/`(.*?)`/g, '<code>$1</code>');
-                // 链接/图片
-                html = html.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank">$1</a>');
-                html = html.replace(/!\[(.*?)\]\((.*?)\)/g, '<img src="$2" alt="$1" style="max-width:100%;border-radius:8px;margin:10px 0">');
-                // 列表
-                html = html.replace(/^- (.*$)/gm, '<li>$1</li>');
-                html = html.replace(/^(\d+)\. (.*$)/gm, '<li>$2</li>');
-                // 段落
-                html = html.replace(/^(?!<[a-z])(.*$)/gm, '<p>$1</p>');
-                return html;
+                if(!md) return '';
+                var h = md;
+                h = h.replace(/&/g, '&amp;');
+                h = h.replace(/</g, '&lt;');
+                h = h.replace(/>/g, '&gt;');
+                h = h.replace(/^# (.*$)/gm, '<h1>$1</h1>');
+                h = h.replace(/^## (.*$)/gm, '<h2>$1</h2>');
+                h = h.replace(/^### (.*$)/gm, '<h3>$1</h3>');
+                h = h.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                h = h.replace(/\*(.*?)\*/g, '<em>$1</em>');
+                h = h.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
+                h = h.replace(/`(.*?)`/g, '<code>$1</code>');
+                h = h.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank">$1</a>');
+                h = h.replace(/!\[(.*?)\]\((.*?)\)/g, '<img src="$2" alt="$1" style="max-width:100%">');
+                h = h.replace(/^- (.*$)/gm, '<li>$1</li>');
+                h = h.replace(/^[0-9]+\. (.*$)/gm, '<li>$1</li>');
+                h = h.replace(/^(?!<[a-z])(.*$)/gm, '<p>$1</p>');
+                h = h.replace(/\n/g, '<br>');
+                return h;
             }
             
-            // 文章摘要
+            // 提取摘要
             function getExcerpt(md) {
-                if(!md) return '加载中...';
-                const text = md.replace(/[#*`\[\]()>]/g, '').substring(0, 200);
-                return text.length >= 200 ? text + '...' : text;
+                if(!md) return '';
+                var text = md.replace(/[#*`\[\]()>]/g, '');
+                text = text.substring(0, 200);
+                if(text.length >= 200) {
+                    text = text + '...';
+                }
+                return text;
             }
             
-            const loadedPosts = [];
-            const container = document.getElementById('postsContainer');
+            var loadedPosts = [];
+            var container = document.getElementById('postsContainer');
             
-            // 6. 文章详情页（修复作用域，全局可调用）
-            window.showPost = function(index) {
-                const p = loadedPosts[index];
+            // 显示文章
+            function showPost(index) {
+                var p = loadedPosts[index];
                 if(!p) return;
-                const win = window.open();
-                let html = `<!DOCTYPE html>
-                <html lang="zh-CN">
-                <head>
-                    <meta charset="UTF-8">
-                    <title>${p.title}</title>
-                    <style>
-                        body{font-family:Arial;max-width:800px;margin:0 auto;padding:40px;background:#f9fafb;line-height:1.8;}
-                        .post-header{border-bottom:2px solid #eee;padding-bottom:20px;margin-bottom:30px;}
-                        .post-title{font-size:32px;margin-bottom:10px;color:#2d3748;}
-                        .post-date{color:#666;}
-                        .post-content{background:white;padding:30px;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,0.05);}
-                        .back-link{display:inline-block;margin-top:30px;color:#3182ce;text-decoration:none;}
-                        pre{background:#f7fafc;padding:15px;border-radius:8px;overflow-x:auto;}
-                        code{background:#f7fafc;padding:2px 6px;border-radius:4px;}
-                    </style>
-                </head>
-                <body>
-                    <div class="post-header">
-                        <h1 class="post-title">${p.title}</h1>
-                        <div class="post-date">${p.date}</div>
-                    </div>
-                    <div class="post-content">${p.html}</div>
-                    <a href="javascript:window.close()" class="back-link">关闭窗口</a>
-                </body>
-                </html>`;
-                win.document.write(html);
-                win.document.close();
-            };
+                var win = window.open();
+                var doc = win.document;
+                doc.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>' + p.title + '</title>');
+                doc.write('<style>');
+                doc.write('body{font-family:Arial;max-width:800px;margin:0 auto;padding:40px;background:#f9fafb;line-height:1.8;}');
+                doc.write('.post-header{border-bottom:2px solid #ccc;padding-bottom:20px;margin-bottom:30px;}');
+                doc.write('.post-title{font-size:32px;margin-bottom:10px;}');
+                doc.write('.post-date{color:#666;}');
+                doc.write('.post-content{background:white;padding:30px;border-radius:10px;}');
+                doc.write('.back-link{display:inline-block;margin-top:30px;color:#3182ce;cursor:pointer;}');
+                doc.write('</style></head><body>');
+                doc.write('<div class="post-header"><h1 class="post-title">' + p.title + '</h1>');
+                doc.write('<div class="post-date">' + p.date + '</div></div>');
+                doc.write('<div class="post-content">' + p.html + '</div>');
+                doc.write('<a href="javascript:window.close()" class="back-link">关闭窗口</a>');
+                doc.write('</body></html>');
+                doc.close();
+            }
             
-            // 7. 核心修复：异步加载文章（解决var循环作用域BUG）
-            const promises = [];
-            posts.forEach((postItem) => {
-                const promise = fetch(postItem.file)
-                    .then(res => {
-                        if(!res.ok) throw new Error('加载失败');
-                        return res.text();
+            window.showPost = showPost;
+            
+            // 加载所有文章（修复闭包问题）
+            var loadPromises = [];
+            for(var idx = 0; idx < posts.length; idx++) {
+                var currentPost = posts[idx];
+                var promise = fetch(currentPost.file)
+                    .then(function(response) {
+                        if(!response.ok) throw new Error('Failed to load');
+                        return response.text();
                     })
-                    .then(md => ({
-                        title: postItem.title,
-                        date: postItem.date,
-                        html: mdToHtml(md),
-                        excerpt: getExcerpt(md)
-                    }))
-                    .catch(() => ({
-                        title: postItem.title,
-                        date: postItem.date,
-                        html: '<p>文章文件不存在或加载失败</p>',
-                        excerpt: '文章加载失败，请检查文件路径'
-                    }));
-                promises.push(promise);
-            });
+                    .then(function(markdown) {
+                        return {
+                            title: currentPost.title,
+                            date: currentPost.date,
+                            html: mdToHtml(markdown),
+                            excerpt: getExcerpt(markdown)
+                        };
+                    })
+                    .catch(function(error) {
+                        console.log('Load error:', currentPost.file);
+                        return {
+                            title: currentPost.title,
+                            date: currentPost.date,
+                            html: '<p>文章加载失败，请检查文件路径: ' + currentPost.file + '</p>',
+                            excerpt: '文章加载失败'
+                        };
+                    });
+                loadPromises.push(promise);
+            }
             
-            // 渲染文章列表
-            Promise.all(promises).then(results => {
-                loadedPosts.push(...results);
-                let html = '';
-                results.forEach((item, index) => {
-                    const readTime = Math.max(1, Math.ceil(item.excerpt.length / 200));
-                    html += `
-                    <div class="post-card">
-                        <h2 class="post-title"><a href="javascript:showPost(${index})">${item.title}</a></h2>
-                        <div class="post-meta">
-                            <span>${item.date}</span>
-                            <span>约 ${readTime} 分钟</span>
-                        </div>
-                        <div class="post-excerpt">${item.excerpt}</div>
-                        <a href="javascript:showPost(${index})" class="read-more">阅读全文 →</a>
-                    </div>`;
-                });
-                container.innerHTML = html;
-            }).catch(() => {
-                container.innerHTML = '<div class="loading">加载失败，请刷新重试</div>';
+            Promise.all(loadPromises).then(function(results) {
+                loadedPosts = results;
+                var htmlString = '';
+                for(var i = 0; i < results.length; i++) {
+                    var item = results[i];
+                    var minutes = Math.max(1, Math.ceil(item.excerpt.length / 200));
+                    htmlString += '<div class="post-card">';
+                    htmlString += '<h2 class="post-title"><a href="javascript:showPost(' + i + ')">' + item.title + '</a></h2>';
+                    htmlString += '<div class="post-meta"><span>' + item.date + '</span><span>约 ' + minutes + ' 分钟</span></div>';
+                    htmlString += '<div class="post-excerpt"><p>' + item.excerpt + '</p></div>';
+                    htmlString += '<a href="javascript:showPost(' + i + ')" class="read-more">阅读全文 →</a>';
+                    htmlString += '</div>';
+                }
+                container.innerHTML = htmlString;
+            }).catch(function(error) {
+                console.log('Promise.all error:', error);
+                container.innerHTML = '<div class="loading">加载失败，请刷新页面重试</div>';
             });
         })();
     </script>
