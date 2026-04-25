@@ -18,15 +18,16 @@
         }
         
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 20px;
             display: flex;
             gap: 30px;
         }
         
-        .sidebar {
-            width: 280px;
+        /* 左侧边栏 - LOGO和快捷按钮 */
+        .sidebar-left {
+            width: 260px;
             flex-shrink: 0;
             position: sticky;
             top: 20px;
@@ -57,11 +58,11 @@
         }
         
         .beijing-time {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 600;
             color: #2d3748;
             background: #edf2f7;
-            padding: 10px 16px;
+            padding: 8px 12px;
             border-radius: 12px;
             display: inline-block;
             font-family: monospace;
@@ -90,15 +91,16 @@
         
         .shortcut {
             display: block;
-            padding: 10px 16px;
+            padding: 8px 12px;
             background: #f7fafc;
-            border-radius: 10px;
+            border-radius: 8px;
             text-decoration: none;
             color: #3182ce;
             font-weight: 500;
             border: 1px solid #e2e8f0;
             text-align: center;
             transition: all 0.2s;
+            font-size: 14px;
         }
         
         .shortcut:hover {
@@ -108,7 +110,8 @@
             border-color: #3182ce;
         }
         
-        .main-content {
+        /* 中间区域 - 文章简介 */
+        .content-center {
             flex: 1;
             min-width: 0;
         }
@@ -120,66 +123,113 @@
         }
         
         .blog-header h1 {
-            font-size: 32px;
+            font-size: 28px;
             color: #2d3748;
             margin-bottom: 8px;
         }
         
         .blog-header p {
             color: #718096;
-            font-size: 16px;
+            font-size: 14px;
         }
         
-        .posts-list {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+        .intro-card {
+            background: white;
+            border-radius: 20px;
+            padding: 32px;
+            margin-bottom: 30px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
         
-        .post-card {
+        .intro-card h2 {
+            font-size: 24px;
+            color: #2d3748;
+            margin-bottom: 16px;
+        }
+        
+        .intro-card p {
+            color: #4a5568;
+            line-height: 1.8;
+        }
+        
+        /* 右侧边栏 - 文章列表 */
+        .sidebar-right {
+            width: 300px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+        }
+        
+        .article-list-area {
             background: white;
             border-radius: 16px;
-            padding: 24px;
+            padding: 20px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .article-list-area h3 {
+            font-size: 16px;
+            color: #4a5568;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .article-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .article-item {
+            padding: 12px;
+            background: #f7fafc;
+            border-radius: 10px;
             transition: all 0.2s;
+            cursor: pointer;
+            border: 1px solid #e2e8f0;
         }
         
-        .post-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        .article-item:hover {
+            background: #edf2f7;
+            transform: translateX(4px);
+            border-color: #cbd5e0;
         }
         
-        .post-title {
-            font-size: 22px;
-            margin-bottom: 8px;
+        .article-item.active {
+            background: #3182ce;
+            border-color: #3182ce;
         }
         
-        .post-title a {
+        .article-item.active .article-title {
+            color: white;
+        }
+        
+        .article-item.active .article-date {
+            color: #bee3f8;
+        }
+        
+        .article-title {
+            font-size: 15px;
+            font-weight: 600;
             color: #2d3748;
-            text-decoration: none;
+            margin-bottom: 4px;
         }
         
-        .post-title a:hover {
-            color: #3182ce;
-        }
-        
-        .post-date {
+        .article-date {
+            font-size: 11px;
             color: #a0aec0;
-            font-size: 14px;
-            margin-bottom: 8px;
         }
         
-        .post-desc {
-            color: #718096;
-            font-size: 14px;
-            line-height: 1.5;
-        }
-        
-        @media (max-width: 768px) {
+        @media (max-width: 1000px) {
             .container {
                 flex-direction: column;
             }
-            .sidebar {
+            .sidebar-left, .sidebar-right {
                 width: 100%;
                 position: static;
             }
@@ -191,13 +241,22 @@
                 flex: 1;
                 min-width: 80px;
             }
+            .article-list {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+            .article-item {
+                flex: 1;
+                min-width: 150px;
+            }
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="sidebar">
+    <!-- 左侧边栏：LOGO + 快捷按钮 -->
+    <div class="sidebar-left">
         <div class="logo-area">
             <div class="logo">BLOG</div>
             <div class="beijing-time" id="beijingTime"></div>
@@ -207,16 +266,30 @@
             <div class="shortcut-buttons" id="shortcutList"></div>
         </div>
     </div>
-    <div class="main-content">
+
+    <!-- 中间区域：文章简介 -->
+    <div class="content-center">
         <div class="blog-header">
             <h1>我的博客</h1>
             <p>记录思考，分享技术</p>
         </div>
-        <div class="posts-list" id="postList"></div>
+        <div class="intro-card" id="introContent">
+            <h2 id="introTitle">欢迎来到我的博客</h2>
+            <p id="introText">点击右侧文章列表，查看详细内容。</p>
+        </div>
+    </div>
+
+    <!-- 右侧边栏：文章列表 -->
+    <div class="sidebar-right">
+        <div class="article-list-area">
+            <h3>📚 文章列表</h3>
+            <div class="article-list" id="articleList"></div>
+        </div>
     </div>
 </div>
 
 <script>
+// 北京时间
 function updateBeijingTime() {
     var now = new Date();
     var year = now.getFullYear();
@@ -231,6 +304,7 @@ function updateBeijingTime() {
 updateBeijingTime();
 setInterval(updateBeijingTime, 1000);
 
+// 快捷按钮
 var shortcutNames = ['GitHub', 'Google', 'Stack Overflow', '掘金', '知乎', '阮一峰', 'Vue.js', 'React', 'Tailwind CSS', 'MDN'];
 var shortcutUrls = [
     'https://github.com',
@@ -251,38 +325,99 @@ for (var i = 0; i < shortcutNames.length; i++) {
 }
 document.getElementById('shortcutList').innerHTML = shortcutHtml;
 
-// 文章列表 - 直接使用链接，和快捷按钮一样的方式
+// 文章数据
 var articles = [
     {
+        id: 0,
         title: '欢迎来到我的博客',
         date: '2026-04-26',
-        desc: '这是我的第一篇博客文章。欢迎来到我的个人博客，这里会分享技术心得和学习笔记。',
+        desc: '这是我的第一篇博客文章。欢迎来到我的个人博客，这里会分享技术心得和学习笔记。记录技术成长、分享学习心得是一件非常有意义的事情。通过写作，我们能够加深对知识的理解、帮助他人解决问题、建立个人品牌。',
         url: 'https://raw.githubusercontent.com/你的用户名/仓库名/main/posts/welcome.md'
     },
     {
+        id: 1,
         title: 'EdgeOne Pages 部署教程',
         date: '2026-04-25',
-        desc: '详细介绍如何使用腾讯云 EdgeOne Pages 快速部署静态网站。',
+        desc: '详细介绍如何使用腾讯云 EdgeOne Pages 快速部署静态网站。EdgeOne Pages 是一个强大的静态网站托管平台。部署步骤包括：登录腾讯云控制台、进入 EdgeOne Pages 服务、创建项目、导入 Git 仓库、点击部署。',
         url: 'https://raw.githubusercontent.com/你的用户名/仓库名/main/posts/edgeone-tutorial.md'
     },
     {
+        id: 2,
         title: 'Markdown 写作指南',
         date: '2026-04-24',
-        desc: '高效使用 Markdown 进行技术写作，让你的文章更专业。',
+        desc: '高效使用 Markdown 进行技术写作，让你的文章更专业。Markdown 是一种轻量级标记语言。基础语法包括：标题使用 # 号、列表使用 - 或数字、粗体使用 **文字**、链接使用 [文字](URL)。',
         url: 'https://raw.githubusercontent.com/你的用户名/仓库名/main/posts/markdown-guide.md'
+    },
+    {
+        id: 3,
+        title: '前端性能优化技巧',
+        date: '2026-04-23',
+        desc: '总结前端性能优化的常用技巧和最佳实践，帮助提升网站加载速度。包括图片优化、代码优化、网络优化、缓存策略等方面。',
+        url: 'https://raw.githubusercontent.com/你的用户名/仓库名/main/posts/frontend-optimization.md'
+    },
+    {
+        id: 4,
+        title: 'Vue.js 3 新特性',
+        date: '2026-04-22',
+        desc: '介绍 Vue.js 3 的核心新特性，包括 Composition API、Teleport、Fragment 等。性能提升：更小的打包体积、更快的渲染速度、更好的 TypeScript 支持。',
+        url: 'https://raw.githubusercontent.com/你的用户名/仓库名/main/posts/vue3-features.md'
     }
 ];
 
-var postHtml = '';
-for (var i = 0; i < articles.length; i++) {
-    var a = articles[i];
-    postHtml = postHtml + '<div class="post-card">';
-    postHtml = postHtml + '<div class="post-title"><a href="' + a.url + '" target="_blank">' + a.title + '</a></div>';
-    postHtml = postHtml + '<div class="post-date">' + a.date + '</div>';
-    postHtml = postHtml + '<div class="post-desc">' + a.desc + '</div>';
-    postHtml = postHtml + '</div>';
+// 当前选中的文章
+var currentIndex = 0;
+
+// 显示文章简介（中间区域）
+function showIntro(index) {
+    var a = articles[index];
+    document.getElementById('introTitle').innerHTML = a.title;
+    document.getElementById('introText').innerHTML = a.desc;
+    
+    // 高亮当前选中的文章
+    var items = document.querySelectorAll('.article-item');
+    for (var i = 0; i < items.length; i++) {
+        items[i].classList.remove('active');
+    }
+    items[index].classList.add('active');
+    
+    currentIndex = index;
 }
-document.getElementById('postList').innerHTML = postHtml;
+
+// 打开完整文章（新窗口）
+function openArticle(url, title) {
+    window.open(url, '_blank');
+}
+
+// 渲染右侧文章列表
+function renderArticleList() {
+    var html = '';
+    for (var i = 0; i < articles.length; i++) {
+        var a = articles[i];
+        html = html + '<div class="article-item" onclick="showIntro(' + i + ')">';
+        html = html + '<div class="article-title">' + a.title + '</div>';
+        html = html + '<div class="article-date">' + a.date + '</div>';
+        html = html + '</div>';
+    }
+    document.getElementById('articleList').innerHTML = html;
+    
+    // 默认显示第一篇文章
+    showIntro(0);
+}
+
+// 添加快捷键支持：点击文章标题新窗口打开
+function addClickHandlers() {
+    var titleElement = document.getElementById('introTitle');
+    if (titleElement) {
+        titleElement.style.cursor = 'pointer';
+        titleElement.style.textDecoration = 'underline';
+        titleElement.onclick = function() {
+            openArticle(articles[currentIndex].url, articles[currentIndex].title);
+        };
+    }
+}
+
+renderArticleList();
+addClickHandlers();
 </script>
 
 </body>
