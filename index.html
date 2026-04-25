@@ -1,120 +1,86 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
     <title>My Blog</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: Arial;
             max-width: 1000px;
             margin: 0 auto;
             padding: 20px;
         }
-        .sidebar {
+        .left {
             float: left;
             width: 250px;
-            margin-right: 30px;
         }
-        .main {
+        .right {
             float: left;
-            width: calc(100% - 280px);
-        }
-        .logo-box {
-            background: #f0f0f0;
-            padding: 20px;
-            text-align: center;
-            margin-bottom: 20px;
+            width: 700px;
         }
         .logo {
             width: 120px;
             height: 120px;
-            background: navy;
+            background: blue;
             color: white;
+            text-align: center;
             line-height: 120px;
-            margin: 0 auto;
             border-radius: 50%;
         }
-        .time-box {
-            margin-top: 10px;
-            font-size: 18px;
+        .time {
+            font-size: 20px;
+            margin: 10px 0;
         }
-        .links-box {
-            background: #f0f0f0;
-            padding: 20px;
-        }
-        .link {
+        .btn {
             display: block;
             padding: 8px;
             margin: 5px 0;
-            background: white;
-            text-decoration: none;
-            color: blue;
+            background: #eee;
             text-align: center;
         }
-        .post {
-            background: #f0f0f0;
+        .card {
+            background: #eee;
             padding: 20px;
             margin-bottom: 20px;
         }
-        .post h2 {
-            margin: 0 0 10px 0;
-        }
-        .post h2 a {
+        a {
+            color: blue;
             text-decoration: none;
-            color: black;
         }
-        .date {
-            color: gray;
-            font-size: 14px;
-            margin-bottom: 10px;
-        }
-        .clearfix::after {
+        .clear:after {
             content: "";
             clear: both;
             display: table;
         }
-        @media (max-width: 768px) {
-            .sidebar, .main {
-                float: none;
-                width: 100%;
-            }
-        }
     </style>
 </head>
 <body>
-<div class="clearfix">
-    <div class="sidebar">
-        <div class="logo-box">
-            <div class="logo">BLOG</div>
-            <div class="time-box" id="time"></div>
-        </div>
-        <div class="links-box">
-            <strong>Quick Links</strong>
-            <div id="links"></div>
-        </div>
+<div class="clear">
+    <div class="left">
+        <div class="logo">BLOG</div>
+        <div class="time" id="t"></div>
+        <div id="links"></div>
     </div>
-    <div class="main">
+    <div class="right">
         <h1>My Blog</h1>
         <div id="posts"></div>
     </div>
 </div>
-
 <script>
-function updateTime() {
+function clock() {
     var d = new Date();
     var h = d.getHours();
     var m = d.getMinutes();
     var s = d.getSeconds();
-    h = h < 10 ? '0' + h : h;
-    m = m < 10 ? '0' + m : m;
-    s = s < 10 ? '0' + s : s;
-    document.getElementById('time').innerHTML = h + ':' + m + ':' + s;
+    if (h < 10) h = '0' + h;
+    if (m < 10) m = '0' + m;
+    if (s < 10) s = '0' + s;
+    document.getElementById('t').innerHTML = h + ':' + m + ':' + s;
 }
-updateTime();
-setInterval(updateTime, 1000);
+clock();
+setInterval(clock, 1000);
 
-var linkNames = ['GitHub', 'Google', 'StackOverflow', 'Juejin', 'Zhihu', 'RuanYifeng', 'Vue', 'React', 'Tailwind', 'MDN'];
-var linkUrls = [
+var names = ['Github','Google','StackOverflow','Juejin','Zhihu','RuanYifeng','Vue','React','Tailwind','MDN'];
+var urls = [
     'https://github.com',
     'https://google.com',
     'https://stackoverflow.com',
@@ -128,57 +94,52 @@ var linkUrls = [
 ];
 
 var linkHtml = '';
-for (var i = 0; i < linkNames.length; i++) {
-    linkHtml = linkHtml + '<a class="link" href="' + linkUrls[i] + '" target="_blank">' + linkNames[i] + '</a>';
+for (var i = 0; i < names.length; i++) {
+    linkHtml = linkHtml + '<a class="btn" href="' + urls[i] + '" target="_blank">' + names[i] + '</a>';
 }
 document.getElementById('links').innerHTML = linkHtml;
 
-var posts = [
-    {title: 'Welcome to My Blog', date: '2026-04-26', file: 'posts/welcome.md'},
-    {title: 'EdgeOne Pages Tutorial', date: '2026-04-25', file: 'posts/edgeone-tutorial.md'},
-    {title: 'Markdown Guide', date: '2026-04-24', file: 'posts/markdown-guide.md'}
+var articles = [
+    {title: 'Welcome', date: '2026-04-26', file: 'posts/welcome.md'},
+    {title: 'EdgeOne Pages', date: '2026-04-25', file: 'posts/edgeone-tutorial.md'},
+    {title: 'Markdown', date: '2026-04-24', file: 'posts/markdown-guide.md'}
 ];
 
-function showPost(title, date, content) {
+function openPost(title, date, content) {
     var w = window.open();
     w.document.write('<html><head><title>' + title + '</title></head><body>');
     w.document.write('<h1>' + title + '</h1>');
-    w.document.write('<p>' + date + '</p><hr>');
+    w.document.write('<p>' + date + '</p>');
     w.document.write(content);
-    w.document.write('<hr><p><a href="javascript:window.close()">Close</a></p>');
+    w.document.write('<p><a href="javascript:window.close()">Close</a></p>');
     w.document.write('</body></html>');
     w.document.close();
 }
 
-function loadPost(index) {
-    var p = posts[index];
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', p.file, true);
-    xhr.onload = function() {
-        if (xhr.status === 200) {
-            var content = xhr.responseText;
-            content = content.replace(/^# (.*$)/gm, '<h1>$1</h1>');
-            content = content.replace(/^## (.*$)/gm, '<h2>$1</h2>');
-            content = content.replace(/\n/g, '<br>');
-            showPost(p.title, p.date, content);
+function loadPost(idx) {
+    var a = articles[idx];
+    var x = new XMLHttpRequest();
+    x.open('GET', a.file, true);
+    x.onload = function() {
+        if (x.status == 200) {
+            var c = x.responseText;
+            c = c.replace(/^# /gm, '<h1>');
+            c = c.replace(/^## /gm, '<h2>');
+            c = c.replace(/\n/g, '<br>');
+            openPost(a.title, a.date, c);
         } else {
-            showPost(p.title, p.date, '<p>Failed to load post</p>');
+            openPost(a.title, a.date, '<p>Error loading</p>');
         }
     };
-    xhr.onerror = function() {
-        showPost(p.title, p.date, '<p>Failed to load post</p>');
-    };
-    xhr.send();
+    x.send();
 }
 
-window.loadPost = loadPost;
-
 var postsHtml = '';
-for (var i = 0; i < posts.length; i++) {
-    var p = posts[i];
-    postsHtml = postsHtml + '<div class="post">';
-    postsHtml = postsHtml + '<h2><a href="javascript:loadPost(' + i + ')">' + p.title + '</a></h2>';
-    postsHtml = postsHtml + '<div class="date">' + p.date + '</div>';
+for (var i = 0; i < articles.length; i++) {
+    var a = articles[i];
+    postsHtml = postsHtml + '<div class="card">';
+    postsHtml = postsHtml + '<h2><a href="javascript:loadPost(' + i + ')">' + a.title + '</a></h2>';
+    postsHtml = postsHtml + '<p>' + a.date + '</p>';
     postsHtml = postsHtml + '</div>';
 }
 document.getElementById('posts').innerHTML = postsHtml;
