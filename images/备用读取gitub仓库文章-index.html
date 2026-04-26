@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>张小明的博客</title>
+    <style>
+        /* ========== 全局样式 ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', Roboto, Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+            color: #1a202c;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* 背景装饰 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(circle at 25% 50%, rgba(102, 126, 234, 0.03) 0%, transparent 50%),
+                              radial-gradient(circle at 75% 30%, rgba(118, 75, 162, 0.03) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px;
+            display: flex;
+            gap: 28px;
+            position: relative;
+            z-index: 1;
+            align-items: stretch;
+        }
+
+        /* ========== 左侧边栏 ========== */
+        .sidebar-left {
+            width: 280px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-area {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 28px;
+            padding: 24px 20px;
+            text-align: center;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.5);
+            transition: transform 0.3s ease;
+        }
+
+        .logo-area:hover {
+            transform: translateY(-2px);
+        }
+
+        /* LOGO容器 - 支持图片和文字两种模式 */
+        .logo {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 15px;
+            border-radius: 50%;
+            overflow: hidden;  /* 图片超出圆形时裁剪 */
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            font-weight: bold;
+            color: white;
+        }
+        /* LOGO图片样式 */
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;  /* 图片按比例覆盖整个区域 */
+        }
+
+        .beijing-time {
+            font-size: 17px;
+            font-weight: 600;
+            color: #2d3748;
+            background: linear-gradient(135deg, #edf2f7 0%, #e2e8f0 100%);
+            padding: 8px 14px;
+            border-radius: 40px;
+            display: inline-block;
+            font-family: monospace;
+        }
+
+        .shortcuts-area {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 28px;
+            padding: 20px;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.5);
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .shortcuts-area h3 {
+            font-size: 15px;
+            color: #4a5568;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .shortcuts-area h3::before {
+            content: '✨';
+            margin-right: 8px;
+        }
+
+        .shortcut-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .shortcut-buttons::-webkit-scrollbar {
+            width: 5px;
+        }
+        .shortcut-buttons::-webkit-scrollbar-track {
+            background: #e2e8f0;
+            border-radius: 10px;
+        }
+        .shortcut-buttons::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+        }
+
+        .shortcut {
+            display: block;
+            padding: 8px 12px;
+            background: #f8fafc;
+            border-radius: 12px;
+            text-decoration: none;
+            color: #3182ce;
+            font-weight: 500;
+            border: 1px solid #e2e8f0;
+            text-align: center;
+            transition: all 0.3s;
+            font-size: 13px;
+        }
+
+        .shortcut:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: translateX(6px);
+        }
+
+        /* ========== 中间区域 ========== */
+        .content-center {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .blog-header {
+            margin-bottom: 20px;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.15);
+        }
+
+        /* 页眉背景 - 支持图片和渐变 */
+        .header-bg {
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            padding: 40px;
+            text-align: center;
+        }
+        /* 默认渐变背景 */
+        .header-bg-default {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .header-bg h1 {
+            font-size: 38px;
+            color: white;
+            margin-bottom: 8px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header-bg p {
+            color: rgba(255,255,255,0.95);
+            font-size: 16px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        /* 简介卡片 - 支持图片和渐变 */
+        .profile-card {
+            border-radius: 24px;
+            padding: 28px 36px;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.15);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            flex: 1;
+            position: relative;
+        }
+        /* 默认渐变背景 */
+        .profile-card-default {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        /* 有背景图时的半透明遮罩 */
+        .profile-card-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            border-radius: 24px;
+        }
+
+        .profile-bio {
+            color: white;
+            line-height: 1.7;
+            position: relative;
+            z-index: 1;
+        }
+
+        .profile-bio p {
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        /* ========== 右侧边栏 ========== */
+        .sidebar-right {
+            width: 340px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .article-list-area {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 28px;
+            padding: 20px;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.5);
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .article-list-area h3 {
+            font-size: 15px;
+            color: #4a5568;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .article-list-area h3::before {
+            content: '📖';
+            margin-right: 8px;
+        }
+
+        .article-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .article-list::-webkit-scrollbar {
+            width: 5px;
+        }
+        .article-list::-webkit-scrollbar-track {
+            background: #e2e8f0;
+            border-radius: 10px;
+        }
+        .article-list::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+        }
+
+        .article-item {
+            padding: 12px 14px;
+            background: #f8fafc;
+            border-radius: 14px;
+            transition: all 0.3s;
+            border: 1px solid #e2e8f0;
+            cursor: pointer;
+        }
+
+        .article-item:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transform: translateX(6px);
+        }
+
+        .article-item:hover .article-title {
+            color: white;
+        }
+
+        .article-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #2d3748;
+        }
+
+        .article-date {
+            font-size: 11px;
+            color: #a0aec0;
+        }
+
+        /* 响应式 */
+        @media (max-width: 1000px) {
+            .container {
+                flex-direction: column;
+            }
+            .sidebar-left, .sidebar-right {
+                width: 100%;
+            }
+            .shortcut-buttons {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+            .shortcut {
+                flex: 1;
+                min-width: 80px;
+            }
+            .article-list {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+            .article-item {
+                flex: 1;
+                min-width: 200px;
+            }
+            .header-bg {
+                padding: 30px 20px;
+            }
+            .header-bg h1 {
+                font-size: 28px;
+            }
+            .profile-card {
+                padding: 22px 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="sidebar-left">
+        <div class="logo-area">
+            <!-- LOGO容器，默认显示文字，有图片时会被替换 -->
+            <div class="logo" id="logoContainer">
+                <span id="logoText">ZM</span>
+            </div>
+            <div class="beijing-time" id="beijingTime"></div>
+        </div>
+        <div class="shortcuts-area">
+            <h3>快捷链接</h3>
+            <div class="shortcut-buttons" id="shortcutList"></div>
+        </div>
+    </div>
+
+    <div class="content-center">
+        <div class="blog-header">
+            <!-- 页眉背景容器 -->
+            <div class="header-bg header-bg-default" id="headerBg">
+                <h1>张小明的博客</h1>
+                <p>记录思考 · 分享技术 · 共同成长</p>
+            </div>
+        </div>
+        <!-- 简介卡片容器 -->
+        <div class="profile-card profile-card-default" id="profileCard">
+            <div class="profile-bio">
+                <p>🌟 你好！我是一名热爱技术的全栈开发工程师，拥有5年Web开发经验。</p>
+                <p>📝 这个博客主要分享前端开发、后端架构、云原生技术等方面的学习心得。</p>
+                <p>🎯 我相信技术应该服务于人，希望通过写作帮助更多人成长。</p>
+                <p>📧 联系我：xiaoming.zhang@example.com</p>
+                <p>💡 点击右侧文章列表，直接跳转查看文章。</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="sidebar-right">
+        <div class="article-list-area">
+            <h3>文章列表</h3>
+            <div class="article-list" id="articleList"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+// ========== 北京时间显示 ==========
+function updateBeijingTime() {
+    var now = new Date();
+    var year = now.getFullYear();
+    var month = String(now.getMonth() + 1).padStart(2, '0');
+    var day = String(now.getDate()).padStart(2, '0');
+    var hours = String(now.getHours()).padStart(2, '0');
+    var minutes = String(now.getMinutes()).padStart(2, '0');
+    var seconds = String(now.getSeconds()).padStart(2, '0');
+    var timeString = year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds;
+    document.getElementById('beijingTime').innerHTML = timeString;
+}
+updateBeijingTime();
+setInterval(updateBeijingTime, 1000);
+
+// ========== 快捷按钮 ==========
+var shortcuts = [
+    ['GitHub', 'https://github.com'],
+    ['掘金', 'https://juejin.cn'],
+    ['知乎', 'https://zhihu.com'],
+    ['阮一峰', 'https://ruanyifeng.com'],
+    ['Vue.js', 'https://vuejs.org'],
+    ['React', 'https://reactjs.org'],
+    ['Tailwind CSS', 'https://tailwindcss.com'],
+    ['MDN', 'https://developer.mozilla.org'],
+    ['Stack Overflow', 'https://stackoverflow.com'],
+    ['Google', 'https://google.com']
+];
+
+var shortcutHtml = '';
+for (var i = 0; i < shortcuts.length; i++) {
+    shortcutHtml += '<a class="shortcut" href="' + shortcuts[i][1] + '" target="_blank">' + shortcuts[i][0] + '</a>';
+}
+document.getElementById('shortcutList').innerHTML = shortcutHtml;
+
+// ========== 文章配置 ==========
+var baseUrl = window.location.origin;
+var articles = [
+    { title: '欢迎来到我的博客', date: '2026-04-26', url: baseUrl + '/posts/welcome.html' },
+    { title: 'EdgeOne Pages 部署教程', date: '2026-04-25', url: baseUrl + '/posts/edgeone-tutorial.html' },
+    { title: 'Markdown 写作指南', date: '2026-04-24', url: baseUrl + '/posts/markdown-guide.html' },
+    { title: 'Vue.js 入门教程', date: '2026-04-20', url: baseUrl + '/posts/vue-guide.html' },
+    { title: 'React 快速上手', date: '2026-04-18', url: baseUrl + '/posts/react-guide.html' }
+];
+
+function viewArticle(url) {
+    window.open(url, '_blank');
+}
+window.viewArticle = viewArticle;
+
+var articleHtml = '';
+for (var i = 0; i < articles.length; i++) {
+    var a = articles[i];
+    articleHtml += '<div class="article-item" onclick="viewArticle(\'' + a.url + '\')">';
+    articleHtml += '<div class="article-title">' + a.title + '</div>';
+    articleHtml += '<div class="article-date">' + a.date + '</div>';
+    articleHtml += '</div>';
+}
+document.getElementById('articleList').innerHTML = articleHtml;
+
+// ==================== 图片配置区域 ====================
+// 在这里填写你的图片URL，留空则使用默认渐变色
+
+// 1. LOGO图片 (建议 120x120 像素，圆形显示)
+// 例如: 'https://example.com/logo.png' 或 './images/logo.png'
+var logoImageUrl = '';
+
+// 2. 页眉背景图 (建议 1400x300 像素)
+// 例如: 'https://example.com/header-bg.jpg' 或 './images/header-bg.jpg'
+var headerBgImageUrl = '';
+
+// 3. 简介卡片背景图 (自适应全图，建议 800x400 以上)
+// 例如: 'https://example.com/card-bg.jpg' 或 './images/card-bg.jpg'
+var cardBgImageUrl = '';
+
+// ========== 应用图片配置 ==========
+
+// 应用LOGO图片
+if (logoImageUrl) {
+    var logoContainer = document.getElementById('logoContainer');
+    // 清空容器，放入img标签
+    logoContainer.innerHTML = '<img src="' + logoImageUrl + '" alt="Logo">';
+}
+
+// 应用页眉背景图
+var headerBg = document.getElementById('headerBg');
+if (headerBgImageUrl) {
+    headerBg.style.backgroundImage = 'url(' + headerBgImageUrl + ')';
+    headerBg.style.backgroundSize = 'cover';
+    headerBg.style.backgroundPosition = 'center';
+    headerBg.classList.remove('header-bg-default');  // 移除默认渐变样式
+} else {
+    headerBg.classList.add('header-bg-default');     // 使用默认渐变
+}
+
+// 应用简介卡片背景图
+var profileCard = document.getElementById('profileCard');
+if (cardBgImageUrl) {
+    profileCard.style.backgroundImage = 'url(' + cardBgImageUrl + ')';
+    profileCard.style.backgroundSize = 'cover';
+    profileCard.style.backgroundPosition = 'center';
+    profileCard.classList.remove('profile-card-default');  // 移除默认渐变样式
+    // 添加半透明遮罩，让白色文字更清晰
+    var overlay = document.createElement('div');
+    overlay.className = 'profile-card-bg';
+    profileCard.insertBefore(overlay, profileCard.firstChild);
+} else {
+    profileCard.classList.add('profile-card-default');     // 使用默认渐变
+}
+</script>
+
+</body>
+</html>
